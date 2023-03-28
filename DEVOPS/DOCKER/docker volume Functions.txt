@@ -1,0 +1,75 @@
+
+
+
+
+DOCKER VOLUME ;;
+
+  :-->>  when we create a volue and mount it to any container to any path ot will stores that respective data from that path to volume.
+      	- so even if we delete the respective container, the data remains in the volume and we can acces it again by mounting the volume again.   
+
+ docker volume create abc (creating volume) 
+ docker run -it --mount source=abc,destination=/app -d ubuntu  (creating & mounting volume)
+ docker ps 
+ docker exec -it 1234567890abc bash (executing cont.)
+
+
+
+DOCKER BIND MOUNT ;;
+
+ :-->>  use to mount the folder from localhost to container, 
+ 	
+ 	 	
+ mkdir abc ( creating folder )
+ docker run --it -v /home/ubuntu/abc:/var/www/html/ -d -p 90:80 new_1(image name) 	
+ docker ps
+ docker exec -it 1234567890abc bash (executing cont.)
+ 
+ 
+ 
+
+*********************************************************************************************************************************************************************************************
+
+
+docker run -d --mount source=intellipat,destination=/var/jenkins_home jenkins/jenkins:lts
+
+73 docker volume create intellipat    74 docker volume ls   75 docker volume inspect intellipat   
+76 ls -lart /var/lib/docker/volumes/intellipat/_data     77 docker ps     78 docker rm 3c2c14514906 50ccc28379bd -f 
+79 docker ps      80 docker run -d --mount source=intellipat,destination=/var/jenkins_home jenkins/jenkins:lts 
+81 ls -lart /var/lib/docker/volumes/intellipat/_data      82 docker ps     83 docker exec -it 47e3cde96540 bash
+
+docker run -d -v /opt/jenkins:/var/jenkins_home jenkins/jenkins:lts
+
+
+*********************************************************************************************************************************************************************************************
+
+
+ FUNCTIONS 
+
+ { FROM RUN ADD COPY  }
+  Comand for MavenBuild 
+
+  1      git clone https://github.com/anujdevopslearn/MavenBuild.git
+  2     cd MavenBuild/
+  3    ls
+  4    cat Dockerfile
+  5    ls
+  6    mv ../dockerfile .
+  7    cd ..
+  8    ls
+  9    cat dockerfile
+  10  exit
+  11  cd MavenBuild
+  12  vi Dockerfile
+  13  docker build -t javacode .
+  14  docker run -it javacode bash
+  15  history
+
+*******************************************************************************
+
+
+
+
+
+
+
+

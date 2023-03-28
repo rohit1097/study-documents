@@ -1,0 +1,94 @@
+
+8. connect magento server from bastion host 
+9. deploy magento app on magento server
+10. configure Launch template
+11. configure auto scaling
+12. configure Load balancer
+13. configure WAF
+14. configure cloundfront
+15. configure rout53
+
+***********************************************************************
+
+QUESTIONS :
+
+for connecting magento server from bastion host, we need NAt getway which is chargeble, so can we go for it..? 
+
+whre do we get this magento app, and how to install it ?
+
+launch templete ?
+
+auto scaling between ??
+
+how & whre to create RDS  ( private subnets  )
+
+
+
+LOG EXPERTS details in RDS ?
+
+
+
+***********************************************************************
+ Solutions :
+ 
+copy key from laptop to bastion ( public )
+magento on private server...
+
+
+launch template
+auto scle
+( both in same, scalling servers, if traffic goes high creates new servers,  
+
+
+((APP server which is magento )
+so magento server is private then it will be scale up/scale down as per the traffic ) )
+
+***********************************************************************
+
+RDS 
+
+LOG EXPERTS details in RDS ?
+
+***********************************************************************
+
+steps now
+
+connecting bastion & private
+RDS on prvate server  (  synchronus = multi AZ\\ asynchro = read replica )
+Magento app installation
+launch template & auto scalling
+
+
+***********************************************************************
+
+
+ EC2 management & RND over RDS 
+ Configure & Established a connection between magento server from bastion host 
+ Configure RDS Subnet Groups,
+ Configure RDS Security Groups,
+ Configure RDS Instance with Multiple Availability Zones.
+
+
+******************************************************************************************
+
+
+RND & Magento app installation
+launch template & auto scalling
+load balancer,
+WAF.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

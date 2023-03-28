@@ -1,0 +1,239 @@
+
+#####     TERRAFORM PROJECT FOR AUTOMATE INFRASTRUCTUNE ON AWS   ####
+
+
+
+
+                           **************************INSTALLATION******************************************
+
+   apt install unzip
+
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            ( https://aws.amazon.com/cli/ )
+   unzip awscliv2.zip
+   ./aws/install
+    aws --version
+    which aws
+
+
+
+terra installation guid :=
+( https://www.youtube.com/watch?v=6aADuw2cWXQ )
+( https://www.coachdevops.com/2019/02/install-terraform-on-ubuntu.html )
+
+     sudo mkdir -p /opt/terraform
+     cd /opt/terraform
+     sudo wget https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_amd64.zip   [  downloading terraform  ]
+
+     
+     unzip terraform_0.14.3_linux_amd64.zip
+     ls -lart
+     mv terraform /usr/local/bin/terraform
+     terraform -version
+     ls -alrt
+
+
+[ task execution commands ]
+
+    terraform init      
+    terraform plan
+    terraform apply
+    terraform output
+    terraform destroy
+    history
+
+                   **************************create TERRAFORM Directory*******************************
+
+    mkdir terraform
+    cd terraform
+
+
+                   **************************create CREDS*******************************
+ 
+### vi creds.tf
+
+      provider "aws" {
+      access_key = ""
+      secret_key = ""
+      region     = "us-east-2"
+    }
+
+ 
+
+
+                       **************************create VPC*******************************
+
+### vi main.tf
+
+ resource "aws_vpc" "Main" {                
+   cidr_block       = "10.0.0.0/16"     
+   instance_tenancy = "default"
+   tags = {
+      Name = "Main"
+     }
+ }
+
+                 ********************************IG****************************
+ 
+ resource "aws_internet_gateway" "IGW" {    
+    vpc_id =  aws_vpc.Main.id 
+    tags = {
+      Name = "IGW"
+     }              
+ }
+
+
+                 ********************************SUBNETS************************ 
+
+ resource "aws_subnet" "publicsubnets" {    
+   vpc_id =  aws_vpc.Main.id
+   cidr_block = "10.0.1.0/24"  
+   availability_zone = "us-east-2a"
+   tags = {
+      Name = "publicsubnets"
+     }      
+ }
+                   
+ resource "aws_subnet" "privatesubnets" {
+   vpc_id =  aws_vpc.Main.id
+   cidr_block = "10.0.2.0/24" 
+   availability_zone = "us-east-2b" 
+   tags = {
+      Name = "privatesubnets"
+     }        
+ }
+
+
+                ************************************RT****************************
+ 
+ resource "aws_route_table" "PublicRT" {    
+    vpc_id =  aws_vpc.Main.id
+    tags = {
+      Name = "PublicRT"
+     }
+         route {
+    cidr_block = "0.0.0.0/0"               
+    gateway_id = aws_internet_gateway.IGW.id
+     }
+ }
+ 
+ resource "aws_route_table" "PrivateRT" {    
+   vpc_id = aws_vpc.Main.id
+   tags = {
+      Name = "PrivateRT"
+     }
+        route {
+   cidr_block = "0.0.0.0/0"             
+   nat_gateway_id = aws_nat_gateway.NATgw.id
+   }
+ }
+ 
+ resource "aws_route_table_association" "PublicRTassociation" {
+    subnet_id = aws_subnet.publicsubnets.id
+    route_table_id = aws_route_table.PublicRT.id
+ }
+ 
+ resource "aws_route_table_association" "PrivateRTassociation" {
+    subnet_id = aws_subnet.privatesubnets.id
+    route_table_id = aws_route_table.PrivateRT.id
+ }
+
+                  ***************************NAT GATEWAY/ ELASTIC IP *********************************
+
+
+ resource "aws_eip" "nateIP" {
+   vpc   = true
+ }
+ 
+ resource "aws_nat_gateway" "NATgw" {
+   allocation_id = aws_eip.nateIP.id
+   subnet_id = aws_subnet.publicsubnets.id
+   tags = {
+      Name = "NATgw"
+     }
+ }
+
+
+               *************************VARIABLES****************************************
+
+
+###  vi variables.tf
+
+
+variable "region" {}
+ variable "main_vpc_cidr" {}
+ variable "public_subnets" {}
+ variable "private_subnets" {}
+
+
+
+              **************************SECURITY GROUPS**********************************
+
+### vi network.tf
+
+
+resource "aws_security_group" "httpssh" {
+    vpc_id = aws_vpc.Main.id
+    
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    tags = {
+        Name = "httpssh"
+    }
+}
+
+
+            ****************************EC2 INSTANCE***********************************
+
+resource "aws_instance" "public" {
+  ami                         = "ami-0b9064170e32bde34"
+  associate_public_ip_address = "true"
+  instance_type               = "t2.micro"
+  key_name                    = "myvpc"
+  vpc_security_group_ids      = [aws_security_group.httpssh.id]
+  subnet_id                   = aws_subnet.publicsubnets.id
+
+  tags = {
+    Name = "public"
+  }
+}
+
+
+
+
+resource "aws_instance" "private" {
+  ami                         = "ami-0b9064170e32bde34"
+  associate_public_ip_address = "false"
+  instance_type               = "t2.micro"
+  key_name                    = "myvpc"
+  vpc_security_group_ids      = [aws_security_group.httpssh.id]
+  subnet_id                   = aws_subnet.privatesubnets.id
+
+  tags = {
+    Name = "private"
+  }
+}
+
+
+
+
+
+
+

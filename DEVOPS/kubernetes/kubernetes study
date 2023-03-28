@@ -1,0 +1,305 @@
+
+
+	## KUBERNETES :-->>       
+	
+		MANIFEST FILE ( DEPLYOMENT FILE, SERVICE FILE )
+
+
+#--> Docker Swarm:  no autoscalling, no gui, no automatic rollbacks, 
+  	  heapster: its a native support for k8s, for cluster monitoring,
+
+#-->  k8s :  built-in high availability, failover, and healing of failed nodes. 
+	
+
+
+
+
+** EKS: elastic k8s service
+
+add-on's : Add-ons use to provision a cluster with the pre-requisite operational tools in place for you to begin running your applications.
+ 		kube proxy, core dns, amazon vpc cni
+
+node group :  collection of a fargate or ec2-intances where pod will be deploy.
+
+update kubeconfig:  
+	- Kubernetes uses a YAML file called kubeconfig to store cluster authentication information for kubectl.
+	- contains all information about clusters, users, namespaces, and authentication mechanisms. 
+		
+		:aws eks --region us-east-1 update-kubeconfig --name techgenie-cluster		
+
+________________________________________________________________________________________________________________________________________________________________________
+ 
+* Statefullset : 
+		- Pods which having volume needs to store data in a pod, used persistent volume.
+		- Application that store data. 
+		- use individual pod memory from using a persistant volume.
+		- allows to mount volume on pod
+		- pod with its own data with persistant volume. 
+		
+* Stateless set: 
+		- no need to store a data. it can get a data from cache.
+		- stateless pods use the node memory to store data
+		
+* Daemonset: 
+	- responsible to deploy a pod on each node on creation. (pod will be anything, like for node monitoring)  
+	- also responsible for to delete a Pod while deleting node. 
+	- if we delete demonset, it will automatically delete all pods created by demonset from all nodes.
+	- deployment file is same as normal pod creation yaml file.  just kind will be DaemonSet.
+		: kind: DaemonSet
+		
+* ReplicaSet:
+	-  use to create multiple pods by using replicaset-file.yaml
+	- if the replicaset file gets delete, all pods created by rs will be deleted
+	      	: Kind: ReplicaSet 		
+	      	
+	: kubectl scale deploy pod-name --replic=3 (to increase replicas)
+	: kubectl get pods
+	: kubectl get po -o wide 
+	: kubectl rollout history deploy pod-name   (rolling update- list pod versions)
+	: kubectl rollout undo deploy pod-name   (rolling back to previous version)
+
+
+
+
+* ConfigMap:
+	- configmap is an API-object use to connect with pod, it use to store non-confidential value.
+	- a same config map can be connect with a multiple pods in a same namespace.
+		
+		: kubectl create configmap configmap-name --from literal=name-confignmap
+		: 
+
+________________________________________________________________________________________________________________________________________________________________________
+
+
+volumes: 
+	- persistent volume : holds information about physical storage.
+	- persistent volume claim : request for a PV. 
+
+storage class : gp2, 
+
+________________________________________________________________________________________________________________________________________________________________________
+(reference: https://www.youtube.com/watch?v=y4UarwGKZQQ
+
+Taint :
+	- apply on nodes
+	- only the pods with toleration apllied can be aloow to deploy on taint node.
+	- one or more taints canbe apply on one node.	
+	- taint effect: 
+		: Noschedule- only toleration pods can be deploy.
+		: prefer Noschedule- try to deploy without toleration pods also but no guarenty that they will deploy.
+		: No execute- already available pods schedule on another node if taint is apply on that node.
+
+Tolerations:
+	- apply on pods.
+	- apply on those pods which which we want to deploy on taint nodes. 
+
+[ Commands ]
+	: kubectl taint nodes <node-name> <key=value>:NoSchedule
+	: kubectl taint nodes master run=mypod:NoSchedule (taint creation)
+	: kubectl describe node master | grep taint
+	
+	: kubect run testpod --image=nginx --restart=Never (temp pod creation using image nginx)
+	: kubectl get po -o wide (describe pod)
+	
+	: kubectl run toleration-pod --image=nginx -restart=Never --dry-run -o yaml > pod.yaml (creating yaml file for pod configuration)
+
+spec:	
+  tolerations:
+  - key: "run"
+    operator: "Equal"
+    value: "mypod"
+    effect: "NoSchedule"
+
+kubectl create -f pod.yaml
+________________________________________________________________________________________________________________________________________________________________________
+
+
+
+	kubelet (10255): service agent, that controls and maintain for pod specs. 
+		  can be run on each node to enable communication between master-slave
+
+	kubectl : CLI tool, deploying-managing apps on k8s. creating, managing,deleting cluster resource 	  
+
+
+	minikube : tools which runs locally, runs on sinle node k8s cluster over virtual machine.
+	Kubeadm : on premise ( like on ec2, or clouds)
+
+	
+	MASTER-->
+		1> etcd   - stores metadata of cluster.
+			  - stores configuaration info of each nodes in the cluster.
+			  - stores highly availble key value stores that can be distributed in multiple nodes.
+			  - accessible only by kube-API server, cz it having some sensitive info 
+		
+		2> API server - provides all operation on cluster using API. this server implements an interface. which used to radily communicate .
+			      - Kubeconfig is a pakage along with the server side tool that can be used for communication. 
+		
+		3> kube-controller-manager -  actuall state = desired state 
+					    -  used to run on master to run controllers.
+					    -  each controller has saperatre process. 
+					    -  to rediuce complexity all run in a single binary & run process.
+					    -  checks actual and desired state value, and reports to api server
+					    	
+		
+		4> schedular - used to tracking workload on cluster & placing eaqul load on resources
+		
+		5> cloud controller manager -   if ur k8s is on cloud then cloude controller manager is works as a controller manager.
+						service controller - for creating, updating & deleting cloud provider load balancers 
+						volume controller - for creating, attaching, & interacting with the cloud provider.
+						
+			
+			
+	
+	NODE :-->
+	  	1>  Container Runtime - it is a s/w that is responsible for running containers. 
+	  				kubernetes support diffrent cont. runtimes like = docker, rklet, cri-o etc.
+	  	
+	  	2>  Kubelet Service -   it communicates with master componenets to receive commands & work.	
+	  				used to communicate with api-server. [ kubelet to api-server to controller]
+	  				
+	  				 this is a small service used for relaying information to & from control plane services. 
+	  			         it interacts with etcd store to read configuration details & right values.
+
+	  				
+	  				
+	  	3> Kubernetes Proxy service - it runs on each node  & helps in making services available to external host
+	  					helps in forwording the request to correct containers & is capable of performing primitivr load balancing .
+	  					- provides it to each pod
+	  					
+	  
+	  
+	ADD-ON'S :--->> 
+		
+		it use kubernetes resources ( daemonset, Deployment ) to implement cluster features.
+		becouse provide cluster-level features & namespaced resources for add-ons that belong within the kube-system namespace
+		
+	   DNS --> 
+	    	cluster DNS is a server in adition to the other server in our environment, which server DNS records for kubernetes services.
+	    		  					 
+	   Web-UI --> 
+	  	its a general purpose , web based UI for kubernetes cluster
+	  	
+	   container-resource manager -->
+	  	CRM is used to record generic time series metrics coontainer in a central DB.
+	  	how  nodes performing, monitor health, killes & restarting container's monitoring.						
+	  										
+	   cluster level logging -->
+	 	  it's responsible for saving containers logs.
+	 	  	
+	   kubectl -->
+		 its interacts with kube-apiserver & sends commands to the master node. 
+		 each command converted into api call.
+		 
+		 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	Name : 
+		- only one object of a given kind can have a given name at a time, there will wi no 2 object having same names are allowed,
+		- k8s object can possible to have a name upto 253 character long.
+		- every object has its own unique distinct UID
+	
+	Namespaces :
+		- namespaces are a way to divide clusters resources among multiple users.
+		- there will be multiple virtual clusters backed by same physicle cluster. 
+		- this clusters are called as namespaces.
+		- If multiple users are working on a same thing, then we need to define namespaces, cz it is good for to diffrenciate between a vitual clusters.
+		- namespaces can not be nested one inside other, they are unique
+		- k8s resources are present in one namespace only. 
+		
+	Labesls & Selectors : 
+		- labels are ky-value pairs that are attached to object , such as pods.
+		- labels are intendes to specify the identification of attributes of the objects. 
+		
+		- Selectors help us in finding these items like labels (to locate labels).  
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+SERVICES :
+
+1> CLUSTER IP :
+		- Exposes the service on cluster-internal IP.
+		- not to expose service over internet.
+		- expose th service only in between the slaves & masters.  
+		
+2> Node Port : 
+		- Exposed the service over internet
+		- expose service over static-IP at static port.
+
+3> Load balancer :	
+		-  expose service externally using cloud provide's load balancer.
+		
+4> External Name :
+		- Maps the service to the contents of the external name.
+		
+		
+								
+
+at example-app.yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+   name: php-apache
+   namespace: hpa-test
+  spec:
+   selector:
+     matchLabels:
+       run: php-apache
+   replicas: 1
+   template:
+     metadata:
+       labels:
+         run: php-apache
+     spec:
+       containers:
+       - name: php-apache
+         image: k8s.gcr.io/hpa-example
+         ports:
+         - containerPort: 80
+         resources:
+           limits:
+             cpu: 500m
+           requests:
+             cpu: 200m
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata:
+   name: php-apache
+   namespace: hpa-test
+   labels:
+     run: php-apache
+  spec:
+   type: cluster IP
+   ports:
+   - port: 80
+   selector:
+     run: php-apache
+  
+   
+  kubectl apply -f example-app.yaml
+  deployment.apps/php-apache created
+  service/php-apache created
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		  
+				 	
+		
+

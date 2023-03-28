@@ -1,0 +1,102 @@
+:: STEPS FOR AUTOSCALLING WITH EFS ::
+   -------------------------------
+
+## EFS CONFIGURATION ::---->>
+   -------------------------
+step 1 :
+	- Configure EFS file system on AWS Console.
+	
+step 2 :
+	- click and select the efs need to Mount
+	- click on "Attach" button showing inside the selected EFS 
+	- select an option for mounting that is : "Mount via IP/DNS"    	
+	- select an availability zone in which your ec2-instance is present
+	- select & copy the mounting command.
+
+Step 3 :
+	- select "Network" option and click on "Manage" button. 
+	- add the security groups of the respective server where you want to mount the EFS.
+	
+step 4 :
+	- Go to ec2-server & SSH connect it
+	- fire the following commands to install the efs prerequisites	
+		- sudo apt-get -y install nfs-common
+		- sudo apt-get update
+
+Step 5 :
+	- Mount the EFS using the comand you copied from the Attach option	
+	- Remember mount EFS on the directory/folder you want to share with respective servers.  
+	 	- < MOUNT VIA IP COMMAD >
+	- Check EFS mounted succsesfully or not.
+		- df -ah
+				
+step 6 :
+## TO MOUNT THE EFS PERMANANTLY ON THE EC2-SERVER. :-->>
+		
+	- Edit the fstab file and add the below command. To edit the file use the command below.
+		- sudo vi /etc/fstab 
+	- Add the contect in the file.
+		- <domain from the mount command from mount via ip option>:/< path to mount dir/folder> nfs defaults,_netdev 0 0		
+		EX. :- fs-d3e98219.efs.eu-west-1.amazonaws.com:/ usr/bin/efs nfs defaults,_netdev 0 0
+	
+	- test the mounting is working perfect on not
+		- sudo mount -fav
+
+	- Check again, EFS is mounted succsesfully or not.
+		- df -ah
+
+	- To unmount the EFS use below comand. (optional) 
+		- umount -f /usr/bin/efs
+
+
+******************************************************************************************************************************************************************
+
+## EROSDIGITAL FOLDER DATA MOUNTING/TRANSFERRING TO EFS FROM SERVER
+   ----------------------------------------------------------------
+
+STEPS   :
+	- moving data from server to EFS, Using linux command 
+	- Since its a large data it will take time
+	- After complete data transfer to EFS - go to next step.
+
+
+******************************************************************************************************************************************************************
+
+## AUTOSCALLING CONFIGURATION::----->>>
+   ---------------------------------
+
+# Taking AMI 
+
+step 1 :
+	- Go to respective ec2-instance which you want to automate and select image & templates from Actions.
+	- create an Image with the require additions if any...otherwise keep default and save. with AMI, snapshot is also gets created automatically.
+	- go to AMI's tab and check image is created or not, also check snapshot.
+	- if image is there, then copy the the ID for further autoscalling process   
+
+
+# Creating Launch Templates :
+
+step 2 :
+	- Go to launch templates tab and select option "create launch template"
+	- select the AMI-ID you created before.
+	- make the other configuration as well if required 	
+
+
+# Creating Autoscalling :
+
+Step 3 :
+	- Go to Autoscalling tab and select "create an autoscalling"
+	- Select the respective template you created, vpc & all configuration and create an autoscalling groups.
+	- check on ec2 servers is launching atomatically or not.
+
+
+#EFS checking 
+
+step 4 :
+	- SSH the autoscale servers and check the EFS is mounted automatically or not..
+		- df -ah
+		- du -ah --max-depth=1 /  ( for file size checking  ) 
+		
+		
+******************************************************************************************************************************************************************
+

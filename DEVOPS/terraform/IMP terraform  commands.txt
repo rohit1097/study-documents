@@ -1,0 +1,200 @@
+## 29-12-2020
+
+how to create IAM user
+steps- 1 go to on AWS Management Console
+           2 search IAM
+           3 select user from dashboard of left side
+           4 & Add User
+           5 (remember to copy the acces key , secret key & also to download the .csv file ) 
+
+*******************************************************************************************************
+ ## 29-12-2020
+  
+ 
+ 1     apt install unzip
+
+ 2     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            ( https://aws.amazon.com/cli/ )  (  https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install  )
+ 3     unzip awscliv2.zip
+ 4     ./aws/install
+ 5     aws --version
+
+ 6     which aws
+
+ 7     mkdir terraform
+ 8     cd terraform
+ 9      vi creds.tf
+                              provider "aws" {
+                                     access_key = "AKIATUYNDRINAFHPAT4D"
+                                     secret_key = "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"
+                                     region = "us-east-2"
+                                                    }
+
+ 10    cat creds.tf
+
+
+
+Terraform installation guid :=
+( https://www.youtube.com/watch?v=6aADuw2cWXQ )
+( https://www.coachdevops.com/2019/02/install-terraform-on-ubuntu.html )
+ {
+       FOR REFERENCE
+      
+     sudo mkdir -p /opt/terraform
+     cd /opt/terraform
+     sudo wget https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_amd64.zip   [  downloading terraform  ]
+ 
+ }
+  
+  
+  
+ 11    wget https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip    [  TERRAFORM DOWNLOADING ]
+           ( https://www.terraform.io/downloads.html ) {right click on ubuntu 64 bit & copy link addres}
+           
+
+ 12    unzip terraform_0.14.3_linux_amd64.zip
+ 13    ls -lart
+ 14    mv terraform /usr/local/bin/terraform
+ 15    terraform -version
+ 16    ls -alrt
+ 
+  
+ 17    FOR TESTING :
+ 	vi main.tf
+ 
+                             resource "aws_instance" "web" {
+                                        ami                = "ami-0a91cd140a1fc148a" (ur instace ID)
+                                        instance_type = "t2.micro"
+                                        key_name       = "personal" 
+                                        tags = {
+                                               Name = "Helloworld"
+                                                  }
+                                             }
+
+ 18    terraform init      
+ 19    terraform plan
+ 10    terraform apply
+ 21    terraform output
+ 22    terraform destroy
+ 23    history
+
+
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************
+
+
+ # Assignment
+
+ ( First Follow & Complete Upword Steps then go through following steps)
+   ( https://github.com/anujdevopslearn/JenkinsTerraform )
+      
+1>  cd terraform
+2>  vi variable.tf
+
+ variable "vpc_id" {
+  description = "VPC ID for AWS resources."
+}
+
+variable "availability_zone_id" {
+  description = "AZ used to create EC2 instances."
+}
+
+variable "subnet_id" {
+  description = "Subnet for EC2 instances."
+}
+
+variable "ami_id" {
+  description = "AMI ID for EC2 instances."
+}
+
+variable "key_name" {
+  description = "Key Name for EC2 Instance"
+}
+           
+           
+
+3>  vi terraform.tfvars
+
+vpc_id = "vpc-9ae959f1"
+subnet_id = "subnet-49c11922"
+availability_zone_id = "us-east-2a"
+ami_id = "ami-0a91cd140a1fc148a"
+key_name = "personal"
+
+
+
+4>  vi user-data.txt
+
+#!/bin/bash
+apt -y update
+apt -y install apache2 docker.io
+
+
+
+5>  vi main.tf
+
+resource "aws_security_group" "jenkins_security_group" {
+  name = "sg_jenkins"
+  description = "jenkins security group."
+  vpc_id = "${var.vpc_id}"
+}
+
+resource "aws_security_group_rule" "ssh_ingress_access" {
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  cidr_blocks = [ "0.0.0.0/0" ]
+  security_group_id = "${aws_security_group.jenkins_security_group.id}"
+}
+
+resource "aws_security_group_rule" "http_ingress_access" {
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+  cidr_blocks = [ "0.0.0.0/0" ]
+  security_group_id = "${aws_security_group.jenkins_security_group.id}"
+}
+
+resource "aws_security_group_rule" "egress_access" {
+  type = "egress"
+  from_port = 0
+  to_port = 65535
+  protocol = "tcp"
+  cidr_blocks = [ "0.0.0.0/0" ]
+  security_group_id = "${aws_security_group.jenkins_security_group.id}"
+}
+
+resource "aws_instance" "jenkins_instance" {
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [ "${aws_security_group.jenkins_security_group.id}" ]
+  associate_public_ip_address = true
+  user_data = "${file("user-data.txt")}"
+  tags = {
+    Name = "Assignment-Instance"
+  }
+  key_name = "${var.key_name}"
+  ami = "${var.ami_id}"
+  availability_zone = "${var.availability_zone_id}"
+  subnet_id = "${var.subnet_id}"
+}
+
+
+
+6>    terraform init      
+7>   terraform plan
+8>    terraform apply
+     
+     (now,  go to aws copy ssh comand of th instace just created and open it on git bash & run this)
+                 -  apt-get update
+                 -  service apache2 status    (checking apache runing or not)
+                 -   docker -v  
+               ( if all run successfully then practical succeeded )   
+
+ 9>    terraform destroy
+10>  (check aws instace terminated or not)
+11>  exit
+
+**********************************************************************************************************************************************
+**********************************************************************************************************************************************

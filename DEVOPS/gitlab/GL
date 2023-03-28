@@ -1,0 +1,190 @@
+
+
+Reference : https://www.youtube.com/watch?v=OWaZXtgq28c&list=PLhW3qG5bs-L8YSnCiyQ-jD8XfHC2W1NL_&index=2
+
+Git - version control system
+to locally track changes in your project/folder and push & pull changes from remote repositories like GitHub, BitBucket, GitLab
+
+GitLab, GitHub, BitBucket
+Services that allow to host your project on a remote repo & have additional features to help in SDLC and CI, CD.
+e.g
+Sharing
+Managing
+Bug tracking
+CI & CD
+
+Step 1: Goto GitLab.com and create an account
+Step 2: Sign in to GitLab
+Step 3: Create a new project on GitLab
+
+
+Step 1: Download git from https://git-scm.com/ and install git 
+
+Step 2: Check git is installed on your system
+   git --version
+
+Step 3: Run following git commands
+<adding NAME>
+   git config --global user.name “xxxx”
+   git config --global user.name
+
+<adding EMAIL>
+   git config --global user.email “xxxx”
+   git config --global user.email
+
+   git config --global --list
+
+Step 4: Create a demo project/folder & add to git	
+   
+Step 5: Goto cmd or terminal or git bash 
+     cd to the location of the folder and run following commands
+   git init
+   git status
+   git add .
+   git commit -m “msg”
+   git push -u “url” master
+
+Step 6: Check Project (Files) Added On Gitlab
+
+
+
+(TO CHNAGE THE DRIVE THROUGH COMMAND LINE USE e:)
+************************************************************************************************************************************************************************************
+What is fork
+How to fork a project
+
+A fork is a copy of a project
+Forking a pro/repo allows you to make changes without affecting the original project
+
+Step 1: Login to GitLab and goto your project
+
+Step 2: Click on Fork button
+
+If you get a message
+No available namespaces to fork the project.           
+
+After making changes to the fork project you can merge the changes to the original project using Merge Request
+
+
+
+************************************************************************************************************************************************************************************
+
+
+What is SSH key
+	- By setting ssh key you can connect to Gitlab Server without using username & password Each time to connect your gitlab server.	 
+
+How to setup SSH key in GitLab
+
+SSH - Secure Shell
+
+- Used for authentication
+- By setting ssh key you can connect to GitLab server without using username and password each time
+
+Step 1: Run command 
+  	 ssh-keygen
+
+On Mac - run command on terminal
+On Windows - use putty or git bash
+
+Step 2: Login to GitLab 
+   Goto account ＞ Settings ＞ SSH Keys
+
+Step 3: Copy contents of id_rsa.pub and Add Key
+
+Step 4: Verify SSH key is added
+
+
+************************************************************************************************************************************************************************************
+
+
+
+What is GitLab Runner
+How to install GitLab runner
+How to register GitLab runner
+How to start GitLab runner
+
+- used in GitLab CI
+    - Open-source continuous integration service  included with GitLab
+- used to run jobs & send results back to GitLab
+
+Step 1: Install GitLab Runner
+	<https://docs.gitlab.com/runner/>
+	<https://docs.gitlab.com/runner/instal...>
+
+brew install gitlab-runner
+gitlab-runner --version
+
+Step 2: Register GitLab Runner
+	<ttps://docs.gitlab.com/runner/regist...>
+gitlab-runner register
+
+Step 3: Start GitLab Runner
+
+brew services start gitlab-runner
+brew services stopgitlab-runner
+
+Step 4: Check runner is activated in the project
+	GitHub - https://github.com/Raghav-Pal/
+	Udemy - https://www.udemy.com/user/raghav-pal-3/
+	Training by Raghav at your venue - raghav.qna@gmail.com
+	Training schedule - https://automationstepbystep.com/trai...
+
+
+tages:
+- archive
+#- push
+- build-image
+- push-image
+
+Archive index.js:
+  stage: archive
+  image: ubuntu
+  when:
+    on_success
+  before_script:
+    - apt-get update
+    - apt-get install zip -y
+    - apt-get install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && zip -g index.zip index.js; else echo "error"; fi
+#    - cd backend-lambda
+#    - zip -g index.zip index.js
+  artifacts:
+    paths:
+      - backend-lambda
+
+
+Building image:
+  stage: build-image 
+  image: docker:18.09.7-dind
+  services: 
+    - docker:18.09.7-dind
+  variables:
+    - DOCKER_DRIVER: overlay
+  script: 
+    - apk add --no-cache git
+    - export DOCKER_HOST=tcp://localhost:2375
+    - docker build -t registry.neosoftcloud.org/rohit.p/gitlab-k8s .   
+
+
+Pushing image to gitlab registry:
+  stage: push-image
+  before_script: 
+    - docker login registry.neosoftcloud.org -u "$CI_REGISTRY_USER" -P "$CI_GITLAB_TOKEN"
+  script:
+    - docker info
+    - docker push registry.neosoftcloud.org/rohit.p/gitlab-k8s  
+
+
+
+
+
+
+
+
+
+
+
+
+
+

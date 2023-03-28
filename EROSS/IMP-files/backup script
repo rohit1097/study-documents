@@ -1,0 +1,292 @@
+
+Reference :
+https://www.youtube.com/watch?v=6Ccoa9jNI7c&t=194s
+
+CRONJOBS==>>
+crontab -e
+
+#erosdigital folder and DB backup
+0 19 * * * sh /root/.backup.sh >/dev/null 2>&1
+
+
+
+
+SCRIPS===>>
+
+
+#DATABASE BACKUP SCRIPT
+#!/bin/bash
+
+NOW=$(date +"%Y-%m-%d")
+NOW_TIME=$(date +"%Y-%m-%d %T %p")
+NOW_MONTH=$(date +"%Y-%m")
+
+
+#MYSQL_PASSWORD= "/root/test/pass.cnf/password"
+
+DBbkp_dir="/root/DBbkp/$NOW_MONTH/"
+mkdir -p ${DBbkp_dir}
+
+
+db_file1="eroslive-$NOW.sql.gz"
+db_file2="eroslivestorage-$NOW.sql.gz"
+
+
+
+#Backing up db
+
+BACKUP_DIR=/root/test/
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com --no-tablespaces -u erosmagentouser -pdGQtF8rQ93hvH5PK eroslive | gzip -c > ${DBbkp_dir}/${db_file1}
+
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com --no-tablespaces -u erosmagentouser -pdGQtF8rQ93hvH5PK eroslive_storage | gzip -c > ${DBbkp_dir}/${db_file2}
+
+#sudo --defaults-file=/home/.pass.conf
+
+#Uploading DB backup on s3
+aws s3 cp ${DBbkp_dir}/${db_file1} s3://eros-backup-s3-bucket/db_backup/eroslive/ --region me-south-1
+aws s3 cp ${DBbkp_dir}/${db_file2} s3://eros-backup-s3-bucket/db_backup/eroslive_storage/ --region me-south-1
+
+
+
+#deleting backup files after uploading on s3
+sudo rm -rf /root/DBbkp
+
+#############################################################################################################
+
+
+#Backing up erosnow Folder
+
+EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+mkdir -p ${EROSbkp_dir}
+ 
+sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.tar.gz /var/www/erosdigital
+
+#Uploading erosnow folder backup on s3 bucket
+aws s3 cp ${EROSbkp_dir}/erosdigital${NOW}.tar.gz s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+sudo rm -r /root/EROSbkp
+
+#################################################################################################################################
+
+
+#################################################################################################################################
+
+#DATABASE BACKUP SCRIPT
+#!/bin/bash
+
+NOW=$(date +"%Y-%m-%d")
+NOW_TIME=$(date +"%Y-%m-%d %T %p")
+NOW_MONTH=$(date +"%Y-%m")
+
+
+#MYSQL_PASSWORD= "/root/test/pass.cnf/password"
+
+DBbkp_dir="/root/DBbkp/$NOW_MONTH/"
+mkdir -p ${DBbkp_dir}
+
+
+db_file1="eroslive-$NOW.sql.gz"
+db_file2="eroslivestorage-$NOW.sql.gz"
+
+
+
+#Backing up db
+BACKUP_DIR=/root/test/
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com --no-tablespaces -u erosmagentouser -pdGQtF8rQ93hvH5PK eroslive | gzip -c > ${DBbkp_dir}/${db_file1}
+
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com --no-tablespaces -u erosmagentouser -pdGQtF8rQ93hvH5PK eroslive_storage | gzip -c > ${DBbkp_dir}/${db_file2}
+
+
+#sudo --defaults-file=/home/.pass.conf
+
+#Uploading DB backup on s3
+aws s3 cp ${DBbkp_dir}/${db_file1} s3://eros-backup-s3-bucket/db_backup/eroslive/ --region me-south-1
+aws s3 cp ${DBbkp_dir}/${db_file2} s3://eros-backup-s3-bucket/db_backup/eroslive_storage/ --region me-south-1
+
+
+
+#deleting backup files after uploading on s3
+sudo rm -f  ${DBbkp_dir}/${db_file1}
+sudo rm -f  ${DBbkp_dir}/${db_file2}
+
+#############################################################################################################
+
+
+#Backing up erosnow Folder
+
+EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+mkdir -p ${EROSbkp_dir}
+
+#sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.gz /var/www/erosdigital
+
+#sudo tar cvf ${EROSbkp_dir}erosdigital${NOW}.tar /var/www/erosdigital 
+sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.tar.gz /var/www/erosdigital
+# ${EROSbkp_dir}erosdigital${NOW}.tar
+
+
+#Uploading erosnow folder backup on s3 bucket
+aws s3 cp ${EROSbkp_dir}/erosdigital${NOW}.tar.gz s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+#sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.gz
+sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar.gz
+
+
+#################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FINALLL
+
+#DATABASE BACKUP SCRIPT
+#!/bin/bash
+
+NOW=$(date +"%Y-%m-%d")
+NOW_TIME=$(date +"%Y-%m-%d %T %p")
+NOW_MONTH=$(date +"%Y-%m")
+
+
+#Backing up erosnow Folder
+
+EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+mkdir -p ${EROSbkp_dir}
+
+sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.gz /var/www/erosdigital
+
+
+#sudo tar cvf ${EROSbkp_dir}erosdigital${NOW}.tar /var/www/erosdigital 
+#sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.tar.gz ${EROSbkp_dir}erosdigital${NOW}.tar
+
+
+#Uploading erosnow folder backup on s3 bucket
+aws s3 cp ${EROSbkp_dir}/erosdigital${NOW}.gz s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+#sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar
+#sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar.gz
+
+
+
+
+
+#########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Backing up erosnow Folder
+
+EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+mkdir -p ${EROSbkp_dir}
+
+sudo tar cvf ${EROSbkp_dir}erosdigital${NOW}.tar /var/www/erosdigital 
+sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.tar.gz ${EROSbkp_dir}erosdigital${NOW}.tar
+
+
+#Uploading erosnow folder backup on s3 bucket
+aws s3 cp ${EROSbkp_dir}/erosdigital${NOW}.tar.gz s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar
+sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar.gz
+
+
+###############################################################################################################
+
+
+
+
+
+
+
+
+
+#Backing up erosnow Folder
+
+#EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+#mkdir -p ${EROSbkp_dir}
+
+#sudo tar cvf ${EROSbkp_dir}erosnow${NOW}.tar /var/www/erosnow 
+
+#Uploading erosnow folder backup on s3 bucket
+#aws s3 cp ${EROSbkp_dir}/erosnow${NOW}.tar s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+#sudo rm -f  ${EROSbkp_dir}/erosnow${NOW}.tar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#DATABASE BACKUP SCRIPT
+#!/bin/bash
+
+NOW=$(date +"%Y-%m-%d")
+NOW_TIME=$(date +"%Y-%m-%d %T %p")
+NOW_MONTH=$(date +"%Y-%m")
+
+
+#Backing up erosnow Folder
+
+EROSbkp_dir="/root/EROSbkp/$NOW_MONTH/"
+mkdir -p ${EROSbkp_dir}
+
+sudo tar cvf ${EROSbkp_dir}erosdigital${NOW}.tar /var/www/erosdigital 
+sudo tar -czvf ${EROSbkp_dir}erosdigital${NOW}.tar.gz ${EROSbkp_dir}erosdigital${NOW}.tar
+
+
+#Uploading erosnow folder backup on s3 bucket
+aws s3 cp ${EROSbkp_dir}/erosdigital${NOW}.tar.gz s3://eros-backup-s3-bucket/erosnow_backup/ --region me-south-1
+
+#deleting eros folder backup files after uploading on s3
+sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar
+sudo rm -f  ${EROSbkp_dir}/erosdigital${NOW}.tar.gz
+

@@ -1,0 +1,43 @@
+
+: Inastallation Steps ( jenkins debian packages )
+
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list' 
+sudo apt-get update
+sudo apt-get install jenkins
+service jenkins status
+
+
+
+
+
+
+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
+
+
+
+#required metadata
+sonar.projectKey=Nimbu
+sonar.projectName=Nimbu
+sonar.projectVersion=1.0
+
+#path ro source directories
+sonar.sources=/home/ubuntu/jenkins/workspace/laptopshop/index.html
+
+
+	directdevops.blog/2019/01/05/sonarqube/
+	
+	
+	https://samsonawane@bitbucket.org/websym12/sampleweb.git
+	
+	
+	
+sudo docker rm -f $(docker ps -a -q)
+sudo docker build /home/ubuntu/jenkins/workspace/build-website/ -t web1
+sudo docker run -it -p 80:90 -d web1 
+
+
+
+https://github.com/hs

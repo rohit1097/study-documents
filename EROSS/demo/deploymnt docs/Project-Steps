@@ -1,0 +1,76 @@
+Step 7 :
+
+	ON PRIVATE SERVER :
+	
+	Registration On Magento Online Portal & generate public/secrete keys in marketplace, As log in creadentials :
+	
+     #  Magento APP Installation		
+	
+$$-->  CONFIGURING Prerequisites for magento:  
+		
+1>>	LAMP server installation :
+
+		$ sudo apt-get install nginx -y
+		$ sudo apt-get install mysql -y
+		$ sudo apt-get install php -y		
+		
+2>>	Install composer :
+		(reference : https://www.digitalocean.com/community/tutorials/how-to-install-composer-on-ubuntu-20-04-quickstart)				
+		$sudo apt update
+		$sudo apt install php-cli unzip
+		$cd ~
+		$curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
+		$HASH=`curl -sS https://composer.github.io/installer.sig`
+		$php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+		$sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+		$composer
+
+		
+3>>	Elastic Search installation :
+		
+			video : ( https://www.youtube.com/watch?v=hVgrXi_9L6Y   ||    https://www.youtube.com/watch?v=HsKXy8AnJTM )
+			document : ( https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html )
+			KIBANA docs : ( https://www.elastic.co/guide/en/kibana/current/deb.html )  
+	
+		ES Commands:
+		for heap size -
+		  sudo su -
+		  cd /etc/elasticsearch/
+		  sudo vim jvm.options/  
+		
+		For ES running status -   
+	         sudo systemctl start elasticsearch
+                 curl localhost:9200
+		
+		PHP Extensions	: ( Add require extensions for magento through CLI )
+			sudo apt install php7.4-xml
+			sudo apt-get install php7.4.3-soap php7.4.3-bcmath
+			sudo apt-get install php-curl
+			  { gd, intl, soap, zip }
+
+		Download & Install magento
+			Video : ( https://www.youtube.com/watch?v=36eWE0K1_0w )   
+			Document : ( https://docs.google.com/document/d/1O43-SwvQPmyTNdHQ5ySE1KyohwMHKljDJQEJFPkHcq4/edit )
+		
+		check magento version : sudo cd /var/www/erosnow 
+					 sudo bin/magento --version
+				
+					 
+		Attaching AWS-RDS DB to magento instance : (PENDING)
+		
+		Magento's last steps pending ::
+			for magento should we connect RDS DB instance to it, at the time of installation  
+		
+		
+
+	     
+Step 8 :
+
+	create a vhost for the erosnow and created one "eros" folder /var/html/ and in that create "pub" folder and point that vhost to that pub folder		
+		
+	cd /etc/nginx/sites-available
+	sudo vim eros.ae.conf	
+		
+		
+		
+		

@@ -1,0 +1,69 @@
+
+create IAM USER
+
+**************************************************Set Up Kubernetes On Amazon EKS*********************************************************
+
+1] Set up CLI (Command Line Interface)
+
+Version 1
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+unzip awscliv2.zip
+
+sudo ./aws/install
+
+################################################################ install version 2
+
+Version 2
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o "awscliv2.zip"
+ 
+sudo apt-get install zip 
+
+unzip awscliv2.zip
+
+sudo ./aws/install
+
+****************************************************************************************
+
+2]  Set Up Kubectl
+
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+
+chmod +x ./kubectl
+
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+
+kubectl version --short --client
+
+****************************************************************************************
+
+3] Set Up eksctl
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+
+sudo mv /tmp/eksctl /usr/local/bin
+
+eksctl version
+
+****************************************************************************************
+                     CREATE A EKS CLUSTER USING EKSCTL
+
+eksctl create cluster \
+--name eks-cluster \
+--version 1.21 \
+--region us-east-2 \
+--nodegroup-name eks-workers \
+--node-type t2.medium \
+--nodes 3 \
+--nodes-min 3 \
+--nodes-max 3 
+
+
+To delete cluster
+
+eksctl delete cluster --name eks-cluster
+
+****************************************************************************************
+

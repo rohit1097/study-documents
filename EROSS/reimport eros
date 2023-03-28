@@ -1,0 +1,159 @@
+
+FOR EROS - MAGENTO :: 
+
+TO DOWNLOAD & IMPORT NEW DATABASE INTO THE USER.
+
+		 ## reference video, docs link for reimport the DB on UAT server 
+			 	https://www.youtube.com/watch?v=gvcBDA2wJJ4 
+				https://stackoverflow.com/questions/4546778/how-can-i-import-a-database-with-mysql-from-terminal
+
+STEP 1 : 
+	 Download the "dump.sql" file on magento-private server using link provided by developer which is going to be import into the database. 
+
+		# wget https://eros-digital.php-dev.in/pub/var/db/export/migratedb.sql.gz 
+		# wget https://eros-digital.php-dev.in/pub/var/db/export/edh_prod_db_storage_bkp20211020.sql.gz
+
+STEP 2 :
+	
+	create a databases in root user and give them GRANT ALL PRIVILEGES  to the databases:
+	   	# User adding:-           	     CREATE USER 'erosmagentouser'@'%' IDENTIFIED BY '***********';
+		# CREATING DATABASE :-              CREATE DATABASE < databasename >;	
+		# Adding permission TO DATABASE :-  GRANT ALL PRIVILEGES ON <DBname>.* TO 'erosmagentouser'@'%';
+
+STEP 3 : 
+	
+	Move to respetive DBuser & check databases are available or not.
+		# show databases;
+		# use <DB name>;
+		# show tables;
+		
+STEP 4	:
+	
+	Before Import, run this command for replace user in file.  [ provided for developer of eros ]
+		# sed -i 's/`root`@`localhost`/`erosmagentouser`@`%`/g' file.sql
+
+
+	[ IMPORTING NEW DATABASE ]
+	Import Dump Database file which we had downloaded previously to the respective database .   
+		# mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u erosmagentouser -p  erosdigital <  db file name          [ for first DB ]
+		# mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u erosmagentouser -p  erosdigital_storage <  db file name  [ for second DB ]
+
+	Check Database successfully imported or not at the respective DBuser.
+
+		# show databases;
+		# use <DB name>;
+		# show tables;
+
+STEP 5 :
+
+	Check & Display the current base_urls set in Magento.
+		# select * from core_config_data where path like '%base%url%';
+	
+		
+	Change the base URLs, for this execute following queries :
+	  	# update core_config_data set value = 'http://uat.eros.ae/' where path = 'web/secure/base_url';      [ FOR UNSECURE ON uat.ers.ae ]
+	  	# update core_config_data set value = 'http://uat.eros.ae/' where path = 'web/unsecure/base_url';    [ FOR SECURE ON uat.ers.ae ]
+		
+			
+				
+STEP 6 :
+	
+	Check admin url using below query :
+		# SELECT * FROM core_config_data WHERE path LIKE "%admin/url/%";				
+	
+
+	Change admin url for new updation 
+		# update core_config_data set value = 'http://uat.eros.ae/admin' where path = 'admin/url/custom';
+		
+
+**
+the final command to take dump of mysql on UAT server
+
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 --no-tablespaces -u erosmagentouser -p erosdigital > erosdigital15-11-2021.sql
+
+**
+
+
+		
+
+*********************************************************************************************************************************************************
+### Steps for Reimporting from Meghna mam
+
+1. Use SSH to log in to the server hosting the Magento installation's database.
+2. Enter the following command:mysql -u <$database_user> -p <$database_name>
+3. Enter your password when prompted.
+4. Access their database using the following command:use <database_name>
+5. Execute: select * from core_config_data where path like '%base%url%';
+6. This will display the current base_urls set in Magento.
+7. 
+   To change the base URLs, execute:
+	update core_config_data set value = 'http://domainname/' where path = 'web/unsecure/base_url';  [ FOR UNSECURE ]
+	update core_config_data set value = 'http://domainname/' where path = 'web/secure/base_url';   [ FOR SECURE ]
+8. 
+   Newly updated for eros digital:
+	  update core_config_data set value = 'http://uat.eros.ae/' where path = 'web/secure/base_url';  [ FOR UNSECURE ON uat.ers.ae ]
+	  update core_config_data set value = 'http://uat.eros.ae/' where path = 'web/unsecure/base_url'; [ FOR SECURE ON uat.ers.ae ]
+9. 
+   Check admin url using below query
+ 	 SELECT * FROM core_config_data WHERE path LIKE "%admin/url/%";
+10.
+   Change admin url
+	update core_config_data set value = 'http://uat.eros.ae/admin’ where path = ‘%admin/url%’;
+11.
+   Newly updates for eros digital:    	
+   	update core_config_data set value = 'http://uat.eros.ae/admin' where path = 'admin/url/custom';
+
+*********************************************************************************************************************************************************
+
+
+
+
+ ## Need to reimport the DB on UAT server 
+ 
+	https://www.youtube.com/watch?v=gvcBDA2wJJ4 
+	https://stackoverflow.com/questions/4546778/how-can-i-import-a-database-with-mysql-from-terminal
+
+#  To move data into repective database::
+mysql -u root -p -P 3306 dbname < D:ab/cd/dump.sql     < source directory path > 
+
+#for remotehost
+sudo mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u root -p
+
+#inside dbserver ::
+	status;
+ 	show databases;
+ 	use dbname;
+	source D:\dumps\testdb_dump.sql  (  dumpdb directory to fetch the database  )
+
+# create database <database name>; 
+	use <name_of_your_database>;
+	source <path_of_your_.sql>
+	ex. mysql> source /home/shabeer/Desktop/new_file.sql;
+
+
+
+
+*************************************************************************************************************************************************************************
+15-11-2021  
+
+- To Take Dump Of Mysql On UAT Server ::
+
+The complete issue was :
+
+- Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events. 
+
+- mysqldump: Error: 'Access denied; you need (at least one of) the PROCESS privilege(s) for this operation' when trying to dump tablespaces
+
+- mysqldump: Couldn't execute 'SELECT COLUMN_NAME,                       JSON_EXTRACT(HISTOGRAM, '$."number-of-buckets-specified"')                FROM information_schema.COLUMN_STATISTICS                WHERE SCHEMA_NAME = 'erosdigital' AND TABLE_NAME = 'admin_analytics_usage_version_log';': Unknown table 'COLUMN_STATISTICS' in information_schema (1109)
+
+
+- for previledges & dump tablespaces we use, "--no-tablesspaces"
+- for Unknown table 'COLUMN_STATISTICS' in information_schema we added "--column-statistics=0"
+
+- so the final command to take dump of mysql on UAT server
+
+sudo mysqldump --column-statistics=0 -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 --no-tablespaces -u erosmagentouser -p erosdigital > erosdigital15-11-2021.sql
+
+
+
+*************************************************************************************************************************************************************************

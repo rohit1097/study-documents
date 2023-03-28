@@ -1,0 +1,19 @@
+Group hierarchy,Region,Description,Service,Upfront,Monthly,First 12 months total,Currency,Configuration summary
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-Magento-Prod-EC2,Amazon EC2,0,299.26,3591.12,USD,"Operating system (Linux), Quantity (1), Pricing strategy (On-Demand Instances), Storage amount (200 GB), Instance type (m5.2xlarge)"
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-bastion-Prod-EC2,Amazon EC2,0,6.98,83.76,USD,"Operating system (Linux), Quantity (1), Pricing strategy (On-Demand Instances), Storage amount (20 GB), Instance type (t3.micro)"
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-ES-Prod-EC2 ,Amazon EC2,0,155.39,1864.68,USD,"Operating system (Linux), Quantity (1), Pricing strategy (On-Demand Instances), Storage amount (150 GB), Instance type (m5.xlarge)"
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-Redis-Prod-EC2,Amazon EC2,0,68.26,819.12,USD,"Operating system (Linux), Quantity (1), Pricing strategy (On-Demand Instances), Storage amount (80 GB), Instance type (t3.large)"
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-Magento-Dev-Sage-EC2,Amazon EC2,0,253.66,3043.92,USD,"Operating system (Linux), Quantity (2), Pricing strategy (On-Demand Instances), Storage amount (80 GB), Instance type (t3.xlarge)"
+Eros-Magento-Estimate,Middle East (Bahrain),EROS-EFS-Private-Prod-EC2,Amazon EC2,0,30.42,365.04,USD,"Operating system (Linux), Quantity (1), Pricing strategy (On-Demand Instances), Storage amount (100 GB), Instance type (t3.medium)"
+Eros-Magento-Estimate,Middle East (Bahrain),eros-Prod-Dev-Stage-rds-mysql,Amazon RDS for MySQL,0,342,4104,USD,"Storage for each RDS instance (General Purpose SSD (gp2)), Storage amount (200 GB), Quantity (2), Instance type (db.t3.medium), Utilization (On-Demand only) (100 %Utilized/Month), Deployment option (Multi-AZ), Pricing strategy (OnDemand)"
+Eros-Magento-Estimate,Middle East (Bahrain),Eros-Prod-Dev-Stage-VPC,Amazon Virtual Private Cloud (VPC),0,80.24,962.88,USD,Number of NAT Gateways (2)
+Eros-Magento-Estimate,Middle East (Bahrain),Eros-Bahrain-Prod-ELB,Application Load Balancer,0,20.68,248.16,USD,Number of Application Load Balancers (1)
+Eros-Magento-Estimate,Middle East (Bahrain),Eros-Bahrain-Prod-EFS-autosclling,Amazon Elastic File System (EFS),0,72.22,866.64,USD,"Desired Storage Capacity (30 GB per month), Provisioned Throughput (10 MB/s per month), Infrequent Access requests (5 GB per month)"
+Eros-Magento-Estimate,Middle East (Bahrain),eros-backup-s3-bucket,S3 Standard,0,25.6,307.2,USD,S3 Standard storage (1 TB per month)
+Eros-Magento-Estimate,Middle East (Bahrain),eros-backup-s3-bucket,Data Transfer,0,0,0,USD,"DT Inbound: All other regions (0 TB per month), DT Outbound: Not selected (0 TB per month)"
+Eros-Magento-Estimate,Middle East (Bahrain),eros-waf-restrict-countries,AWS Web Application Firewall (WAF),0,6.6,79.2,USD,"Number of Rules added per Web ACL (1 per month), Number of Web Access Control Lists (Web ACLs) utilized (1 per month), Number of Rule Groups per Web ACL ( per month), Number of Rules inside each Rule Group ( per month), Number of Managed Rule Groups per Web ACL ( per month)"
+,,,,,,,,
+My Estimate,Middle East (Bahrain),Total Cost,AWS Overall Aproximately,,1361.31,16335.72,USD,
+,,,,,,,,
+Acknowledgement,,,,,,,,
+"* AWS Pricing Calculator provides only an estimate of your AWS fees and doesn't include any taxes that might apply. Your actual fees depend on a variety of factors, including your actual usage of AWS services.",,,,,,,,

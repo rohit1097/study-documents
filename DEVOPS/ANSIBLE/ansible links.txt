@@ -1,0 +1,7 @@
+https://docs.ansible.com/ansible/2.8/reference_appendices/playbooks_keywords.html
+
+https://docs.ansible.com/ansible/2.8/reference_appendices/YAMLSyntax.html
+
+https://jsonformatter.org/yaml-formatter
+
+https://gist.github.com/anujdevopslearn

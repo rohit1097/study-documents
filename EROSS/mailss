@@ -1,0 +1,51 @@
+draft one mail with all details
+like
+why autoscaling failed earlier
+what new approach you are going to apply for auto scaling
+what extra service you are going to use in this senario and what will be the cost for that
+
+
+
+hello team, 
+
+As last time we configure Autoscalling we facing the website slow down issue after applying it on prod,
+the reason for that is, we configured NFS on prod server for autoscalling purpose which slow down the other servers which are created from Autoscalling.
+	
+so for that we have another solution, that we can use the AWS provided service "EFS" for the file sharing task which going to use further in Autoscalling. 
+
+also for now we are going to use the "Default efs configuration that is General Purpose memory And Throughput will be Bursting" to test acordingly for prod environment. 
+if the default configuration will not work as per expected result, we need to improve our troughput IOPS ( read write capacity) and it will Cost accordilgly. 
+
+the cost for that is as per mbps that is for 10 mbps it will cost $72/month.
+find the costing details below.
+
+ 
+
+
+Hello Shridhar,
+
+    can we have a call please on skype or meet for this task, to clear the things for certificate,
+so we can resolve this ASAP.
+
+Thank You
+
+Shridhar.Kavalekar@bankfab.com
+gaurav.mishra@neosoftmail.com
+visal.jose@erosgroup.ae
+
+parag.kumar@neosoftmail.com
+gaurav.mishra@neosoftmail.com
+sidharth.sharma@neosoftmail.com
+vishal.shinde@neosofttech.com
+
+
+john.jawahar@erosgroup.ae
+maulik.bhojani@neosofttech.com
+rebecca.john@neosoftmail.com
+meghna.mane@neosoftmail.com
+ritesh.lamba@erosgroup.ae
+Aliasgar.Jannati@bankfab.com
+Glen.Thomas@bankfab.com
+sachidanand.jha@erosgroup.ae
+Harsha.PeenikkaAravindan@bankfab.com
+

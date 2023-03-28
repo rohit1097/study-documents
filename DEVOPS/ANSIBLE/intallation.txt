@@ -1,0 +1,39 @@
+
+
+ ##   18-12-20
+
+##   INSTALLATION :-->
+
+# ON-MASTER NODE :
+
+sudo apt-get install software-properties-common 
+sudo apt-add-repository ppa:ansible/ansible 
+sudo apt-get update 
+sudo apt-get install ansible
+
+# ON-SLAVE NODE :
+
+sudo apt-get update
+sudo apt-get install python3
+
+# authorizwd_keys :->
+ It is a file, where you will be entering all the machine which can connect to this perticular system/instance  
+
+************************************************************************************************************************************************************************
+
+# INTERVIEW QUE. LINK
+  https://github.com/anujdevopslearn/InterviewQuestions/tree/master/InterviewQuestions
+
+************************************************************************************************************************************************************************
+
+
+Ex 1: Ungrouped hosts, specify before any group headers.
+green.example.com
+
+Ex 2: A collection of hosts belonging to the 'webservers' group
+[webservers]
+alpha.example.orgs
+
+Ex 3: A collection of database servers in the 'dbservers' group
+[dbservers]
+db01.intranet.mydomain.net

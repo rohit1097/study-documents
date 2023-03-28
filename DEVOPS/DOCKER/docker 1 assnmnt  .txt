@@ -1,0 +1,161 @@
+
+        **  ASSIGNMENTS FOR DOCKER - 1  **
+
+
+##  ASSIGNMENT FIRST ##
+
+ Refer lec 8 in containerization using docker in DEVOPS
+  
+docker run -it  -d ubuntu
+docker exec -it  (cont. id) bash
+apt-get update 
+apt-get install apache2
+service apache2 status (check start or not)
+service apache2 start
+exit ( from cont.)
+
+docker ps
+docker rm (cont. id) -f   {remove unwanted container it u want/ not compalsory}
+
+
+
+
+sudo docker commit  (cont. id)  rohit/apache2(image_name)
+docker image (check images)
+docker run -it -p 81:80 -d (image_name)  (runing container & assining port_no to container )
+docker ps (get cont.ID)
+docker exec -it (cont. ID) bash  ( executing & entering into container )
+service apache2 start ( apache started sucsessfuly)
+curl wgetip.com
+
+docker build -t xyz  .      { image BUILDING cmnd}
+docker run -it xyz bash    { image RUN cmds}
+docker tag phpcode rohit/xyz  {  image Launch cmnd }
+
+
+
+
+
+
+now. go to browser paste the resp. ip and port. no which you given
+above i.e. 80 here.  and search 
+--> apache page is loaded sucessfully
+  THE END
+
+*********************************************************************************************************
+*********************************************************************************************************
+
+
+
+##  ASSIGNMENT SECOND ##
+
+ docker ps (get cont. id)
+ {  run cont. by this cmnd if its not shows by PS (docker run -it -d  rohit1097/apache bash)  }
+
+  docker commit (cont. ID) rohit1097/docker ( saving/commit by new name)
+  docker images (check new img created or not)
+  docker run -it -d -p 82:80 rohit1097/docker  (running by giving new port no.)
+  docker ps
+  docker exec -it (cont. ID) bash
+  service apache2 status (check start/not)
+  service apache2 start ( apache started sucsessfuly)
+  curlwgetip.com
+
+  now. go to browser paste the resp. ip and port. no which you given
+  above i.e. 82 here.   and search 
+  --> apache page is loaded sucessfully
+  THE END
+
+*********************************************************************************************************
+*********************************************************************************************************   
+ 
+##  ASSIGNMENT THIRD ##
+
+docker push rohit1097/apache (our image name)
+docker pull rohit1097/apache (our image name)
+docker images
+docker run -it -d -p 83:80 rohit1097/apache ( assigning new port no ) 
+docker ps
+docker exec -it (cont. ID) bash
+service apache2 start
+service apache2 status
+exit
+curl wgetip.com
+
+ now. go to browser paste the resp. ip and port. no which you given
+  above i.e. 83 here.   and search 
+  --> apache page is loaded sucessfully
+  THE END
+
+*********************************************************************************************************
+*********************************************************************************************************   
+
+##  ASSIGNMENT FOURTH / FIFTH & CASE STUDY  ## 
+
+mkdir dockerfile
+cd dockerfile
+vi Dockerfile -->
+{
+FROM ubuntu
+ENV DEBIAN_FRONTEND=non-interactive
+# Install dependencies
+RUN apt-get update -y
+RUN apt-get install -y git curl apache2 php libapache2-mod-php php-mysql
+ADD . /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+}
+
+vi 1.html -->
+{
+<html>
+   <title> HIE  </title>
+ <body> 
+       <h1>  HELLO  </h1>
+ </body>
+ </html>
+}
+
+docker build . -t  rohit1097/new_file
+docker images
+docker ps
+docker run -it -d -p 83:80 rohit1097/new_file
+
+curl wgetip.com  ( get ur ip)
+   now. go to browser paste the resp. ip and port. no which you given
+   above i.e. 83 here.   and search 
+   --> apache page is loaded sucsessfully
+
+   & for html page go to browser paste the resp. ip and port. no which you given
+   above i.e. 83 here.  and search . ( ex.= 18.222.200.172:83/1.html )
+   --> html page is loaded sucsessfully
+
+ 
+docker push rohit1097/new_file
+      (  now pushing images to dockerhub acc. 
+         & check on dockerhub acc. that image sucsessfully pushed or not )
+
+
+  THE END
+
+*********************************************************************************************************
+*********************************************************************************************************   
+
+Dockerfile:
+	- COPY: adding file to the container
+	- ADD : adding files, zip extraction, adding URL 
+	
+	- CMD: can use multiple time (executable in cntainer)
+	- Entrypoint: executable comand. (one time useble in dkrfile)
+
+
+FROM python:3.7.3-stretch
+WORKDIR /app
+RUN rm -rf *
+COPY . /app
+RUN pip install scikit-learn==0.22
+RUN make install  
+EXPOSE 80
+ENTRYPOINT python app.py
+
+
+

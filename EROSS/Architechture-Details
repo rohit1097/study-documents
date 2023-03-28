@@ -1,0 +1,37 @@
+
+EC2-INSTANCES :
+
+NAME (bastion)=  EROS-bastion-Prod-EC2 = 10.0.1.39 (private IP) | 15.185.229.82  (public IP)
+	     
+NAME (private)=  EROS-Megento-Prod-EC2 = 10.0.2.37 ( private IP )
+			
+*****************************************************************************************************
+
+RDS-INSTANCES :
+
+NAME = eros-prod-rds-mysql 
+
+endpoint :   eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com
+
+*****************************************************************************************************
+
+MYSQL USERS :
+
+user: root
+sudo mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u root -p
+Password: bjmS4p5VzhgMPQ9N8fsjTGpt
+
+
+user: erosmagentouser
+sudo mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u erosmagentouser -p
+Password: dGQtF8rQ93hvH5PK
+
+
+databases :
+erosmagento
+erosmagento_storage
+
+*****************************************************************************************************
+
+
+

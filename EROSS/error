@@ -1,0 +1,86 @@
+
+
+
+deploying/
+cicd for magento using aws 
+
+
+
+Megento CICD for megento using devops tools (PHP), configure CICD for megento app,  Auto scalling for megento and for new update release,  how to deploy megento via devops tools.
+badiyaa(like)
+
+
+
+
+
+
+https://vimeo.com/263942149
+
+mvn clean 
+for build 
+
+
+
+
+ELASTICSEARCH ERROR :=
+
+java lang run time exception....its not running as a root so chnge uts prmt to root
+
+
+CHANGING PERMISSION AS AROOT TO RESP DIR.
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /usr/share/elasticsearch
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /var/log/elasticsearch
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /var/log/elasticsearch/
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /var/lib/elasticsearch/
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /etc/default/elasticsearch/
+chown: cannot access '/etc/default/elasticsearch/': Not a directory
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /etc/default/elasticsearch
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# sudo chown elasticsearch:elasticsearch -R /etc/elasticsearch/
+
+
+
+root@ip-10-0-2-37:/usr/share/elasticsearch/bin# vi /etc/default/elasticsearch 
+( added lines)
+START_DAEMON=true
+ES_USER=elasticsearch
+ES_GROUP=elasticsearch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

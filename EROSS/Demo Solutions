@@ -1,0 +1,59 @@
+
+
+# what is clients requirement ?
+
+- to deploy an application which is e-commerse merchandise online shopping site, which is used to deploy through magento.
+- 
+
+# what is magento :
+1> Magento is a ecommerce website platform that specializes in ecommerce websites.
+2> Its users have access to hundreds of unique features.
+3> that help them to connect with their customers and sell their products.
+
+
+- opensource  { Magento Community Edition (Magento CE) }
+- paid  { Magento Enterprise Edition (Magento EE) }
+
+
+# features of magento:
+
+Catalog Management.
+Customer Accounts.
+Order Management.
+Payment & Shipping.
+Search Engine Optimization.
+Marketing and Promotional Tools.
+Site Management.
+Mobile Commerce.
+
+
+AWS services requires:
+EC2
+VPC
+RDS
+LOAD BALANCER
+CLOUDFRONT
+WAF
+ROUTE53
+AUTO SCALLING
+
+
+
+#issue that we faced
+ 
+ - php extensions for magento
+ -> Added require extensions for magento through CLI 
+    sudo apt install php7.4-xml
+    sudo apt-get install php7.4.3-soap php7.4.3-bcmath
+    sudo apt-get install php-curl
+    { gd, intl, soap, zip }    
+ 
+ - heap size issue for elastic search
+ -> Increase heap size from inside the folder 
+    sudo su -
+    cd /etc/elasticsearch/
+    sudo vim jvm.options/  
+ss
+
+
+

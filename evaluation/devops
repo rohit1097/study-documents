@@ -1,0 +1,184 @@
+
+git merge : merge different branches
+git rebase: integrate changes from one branch to another
+git reset: use to undo changes, rollout changes / rollback
+git revert: use to revert to previous commit , undo a single commit
+git cherripick : applying perticular commit from one to another branch 
+
+git pull : newly added code can be fetch in repo. 
+git fetch : to check any changes are there in repo.
+
+
+
+
+** jenkins : 
+	- jenkins is not only a tool it is a framework, 
+	- opensource CICD tool
+	- it has a master slave architechture
+	- multiple plugins are available
+	- plugins use to communicate multiple tools with jenkins 
+	
+	- PLUGINS: docker,git, scm, junit, amazon ec2, html publisher, ssh3
+	  
+	- Lifecycle:  clone,build, test, deploy, static analysis,  package, stage, and much more.  
+	  
+	- pipeline typs:
+		cicd
+		declarative - human readble, easy to write, saperate declared blocks, not executes in sequential manner
+		scripted - flexible, easy to handle, executes in sequential manner
+		
+	- manage jenkins -> plugin manager
+	- manage jenkins -> config globl security -> agents -> tcp port for jnlp -> agent 	  
+	- manage jenkins -> manage nodes -> add new node.
+
+Dockerfile:
+	- COPY: adding file to the container
+	- ADD : adding files, zip extraction, adding URL 
+	
+	- CMD: can use multiple time (executable in cntainer)
+	- entrypoint: executable comand. (one time useble in dkrfile)
+users :	
+	- manage jenkins -> manage users -> add/delete users
+	- manage jenkins -> manage and assign roles -> 
+	- manage jenkins -> config globl security -> role bases strategy (add this pluging) ->  
+	
+	
+freestyle pipeline :
+	- initiate with git webhook
+	- triggering new jobs after completion one job -> git job-> build website -> test.
+	- plugin intsallation.
+	
+-> webhooks are in github settings.
+
+views: build pipelins(plugin), list, my viwes
+pipeline typs: freestile, pipeline, multibranch
+launch methods : launch agent vie ssh, web start, cli
+
+jenkins password: 
+/var/lib/jenkins/secrets/initialAdminPassword
+Jenkins Installation:
+$> sudo apt-get update
+$> sudo apt install openjdk-8-jdk
+$ wget -q-0-https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add
+$> sudo sh-c'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+$ sudo apt update
+$ sudo apt install jenkins	
+
+
+	- ansible is for configuration management 
+	- terraform is for infrastructure management.
+	
+JIRA :
+I had worked on jira in my previous project where our management team created jira story for our project and assigned  it to team members. once we started on this task then we make jira story inprogress and once task is completed  we marked as done. for now we use trello web applicatation for assign task. 	
+
+
+
+pipeline{
+    agent any
+    stages {
+        stage('git clone') {
+            steps{
+                git branch: 'main',
+                url: 'https://github.com/Sidharth034/jenkins-kubernetes-example.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                  sh 'docker build -t sidharth034/nodejsapp-1.0:latest .'
+                }
+            }
+        }
+        stage('Deploy Docker Image') {
+            steps {
+               // sh 'sudo docker login -u sidharth034 -p $dockerhub-pass'                		
+	//echo 'Login Completed'      
+                script {
+                    withCredentials([string(credentialsId: 'dockerhubp', variable: 'dockerhubp')]) {
+                    sh 'docker login -u sidharth034 -p ${dockerhubp}'
+}
+}
+}
+
+                 //withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                   // sh 'docker login -u devopshint -p ${dockerhubpwd}'
+                 //}  
+               //  sh 'docker push sidharth034/nodejsapp-1.0:latest'
+                //}
+            
+        }
+    
+    stage('Deploy App on k8s') {
+      steps {
+            sshagent(['kube-server-cred']) {
+            sh "scp -o StrictHostKeyChecking=no nodejsapp.yaml ubuntu@3.18.225.2:/home/ubuntu"
+            sh "ssh ubuntu@3.18.225.2 sudo kubectl create -f ."
+            sh 'hostname'
+            //sh 'hostname; ls ; pwd'
+         //   script {
+          //      try{
+            //        sh "ssh ubuntu@3.18.225.2 kubectl create -f ."
+              //  }catch(error){
+                //    sh "ssh ubuntu@3.18.225.2 kubectl create -f ."
+        //    }
+//}
+        }
+      
+    }
+    }
+}
+}
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+(its a declarative pipeline)
+: https://www.youtube.com/watch?v=GJBlskiaRrI
+
+
+pipeline{
+    agent any
+    stages {
+        stage('Git clone') {
+            steps{
+                git branch: 'master',
+                url: 'https://github.com/rohit1097/traveling-agency.git'
+            }
+        }
+        stage('Building docker image') {
+            steps {
+                script {
+                  sh 'docker build -t traveling-agency .'
+                }
+            }
+        }
+        stage('ECR login & pushing image') {
+            steps {
+                script {
+                  sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 943696395732.dkr.ecr.us-east-1.amazonaws.com'    
+                  sh 'docker tag traveling-agency:latest 943696395732.dkr.ecr.us-east-1.amazonaws.com/traveling-agency:latest'
+                  sh 'docker push 943696395732.dkr.ecr.us-east-1.amazonaws.com/traveling-agency:latest'
+                }
+            }
+        }
+        stage('EKS-cluster loging') {
+            steps {
+                  sh 'rm -rf ~/.kube/config'                  
+                  sh "aws eks --region us-east-1 update-kubeconfig --name r-eks"
+        }
+    }  
+        stage('Deplyment & service on eks-cluster') {
+            steps {
+                script {
+                  sh 'kubectl delete -f deployment.yaml'
+                  sh 'kubectl apply -f deployment.yaml'
+                  sh 'kubectl apply -f service.yaml'
+                }
+            }
+        }
+
+    }
+}    
+
+

@@ -1,0 +1,98 @@
+
+Basic commands
+    1  ls
+    2  ls -a
+    3  pwd
+    4  mkdir hello
+    5  ls
+    6  cd hello/
+    7  pwd 
+    8  sudo mv ./index.html /var/www/html/
+    9  history
+
+
+installing packages
+  11  sudo apt-get update
+   12  sudo apt-get install python3
+   13  sudo apt-get install apache2
+   14  sudo apt-get install openjdk-8-jdk
+   15  sudo apt-get purge openjdk-8-jdk
+   16  history
+
+
+status of packages
+ sudo systemctl status apache2
+   19  sudo systemctl start apache2
+   20  sudo systemctl enable apache2
+   21  sudo systemctl stop apache2
+   22  sudo systemctl status apache2
+   23  sudo systemctl start apache2
+   24  sudo systemctl enable apache2
+   25  sudo systemctl status apache2
+To exit from status command use 'q'
+
+
+types of editors
+touch-create file without any content
+nano:-
+sudo nano <filename>
+
+for saving the file use 'ctrl+o' 
+for exiting from the editor use:'ctrl+x'
+
+for saving and exiting, use: 'ctrl+x >>y(for yes) >> filename >>click enter'
+
+vi:- 
+
+sudo vi <filename>
+for inserting click on 'i'
+for saving the contents ESC >>:wq
+for exiting without modificattion ':q!'
+sudo cat <filename>  //this will show us with the content of file
+
+ sudo vi 1.txt
+   32  sudo cat 1.txt
+   33  sudo vi 1.txt
+
+
+
+ssh(key less access):
+node 1:
+ 57  ls -a
+   58  cd .ssh
+   59  ls
+   60  sudo cat authorized_keys
+   61  clear
+   62  ssh-keygen
+   63  ls
+   64  sudo cat id_rsa
+   65  sudo cat id_rsa.pub
+   66  history
+   67  sudo cat id_rsa.pub
+   68  ssh ubuntu@54.172.201.132
+   69  sudo cat id_rsa.pub
+   70  ssh root@172.31.26.80
+   71  history
+
+Node2:
+ubuntu user:
+    1  cd .ssh
+    2  ls
+    3  sudo nano authorized_keys
+    4  pwd
+    5  sudo su
+    6  history
+
+
+Root user:
+  1  cd
+    2  pwd
+    3  cd .ssh
+    4  nano authorized_keys
+    5  history
+
+
+script file
+for script use the below to start the file.
+
+#!/bin/sh

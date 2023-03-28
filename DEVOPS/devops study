@@ -1,0 +1,126 @@
+		DEVOPS
+		
+DEV = devlopment
+OPS = Operations
+
+DEVOPS -
+    	it's not a tool, its a cultural movement, where diffrent tools are essential
+	devops grew out of , from Agile soft development.
+
+* DEVOPS PROPERTIES *
+Build automation : ( JENKINS )
+	Fast, Consistence, Repeatable, Portable, Reliable
+Continuous Integration : ( JENKINS)
+	Early Detection Of Error & Fix It,
+	Frequent Release, Continuous testing
+Continuous Delivery :
+	Automated deployement, Rolled back anytime if problem occure
+	Faster time to market, Lower Risk
+Configuration Management :   ( ANSIBLE, PUPPET, CHEF )
+	New version of soft packeges in a single cofiguration file, can make changes/updation on all 	 server, save time, maintainability,  
+Orchestration: ( KUBERNATES )
+	scalability, stability, save time, self service automation, 
+Monitoring :
+	Fast recovery, Visible across teams, Automated response
+
+
+https://xebialabs.com/periodic-table-of-devops-tools/
+
+
+
+Development-security-Operations
+
+IaaS - Infrastructure as a service is a form of cloud computing that provides virtualized computing 	resources over the internet. 
+ 
+ Cyber Security & Attacks:
+ 	- attack surface whre attackes can take actions, keep attack surface small
+	- Malware infect individual server or on network
+
+
+CONTAINERS :
+	where files are stored in executable application format, modules.
+	container images are ephrmeral(for short time)
+	where can updation performes, & new commits & images will be pushed to docker hub.
+	
+Docker bench is a s/w used tool to analyze server infrastructure & docker components
+cmnds used to configure require content :
+docker pull
+docker push
+docker build
+docker create
+docker run
+
+
+PaaS :  Platform as a Service Provide platform & infastructure via self-service tool, to the developers.
+
+Templated - templates are predefine configuration.
+	  - Whenever specific framework & infrastructure require, we can simply select from available templates.
+	 
+OpenShift :
+	It's an open source PaaS Offering from RedHat.
+	It's adopted docker & Kubernates as standard.
+	It's fully automated container orchestration system.
+	here workloads are promoted from development ro test, staging & Production.
+* Platforms provided by openshift are- .NET, Apache HTTP Server, cake PHP, mysql, django,jenkins, perl, nginix, wildfly, python, ruby, etc.
+
+
+OWASP Deppendancy Checker :
+	- Open Web Application Security Project is an opensource scanning system.
+	- Can be run through CLI, & automated build program like Jenkins.
+	- Provides human0readable, & machine readable reports.
+	
+	 
+SONATYPE NEXUX :
+	- it's an open source repository management system.
+	- build artifacts produced by, programs like maven are scanned as automated build pipeline.
+	- onced build o/p is produced, it's import to pushed & compile file to secure repository
+	- repos are ensure QA & staging, pull the same file, 
+	- maintain uniformity and & control the deployement of pipeline.
+	
+		  	
+
+Continuous Delivery Release Automation (CDRA) :
+	- tooling required to promote application workloads to upper environments with minimal or no manual intervention.
+	- auto-Deploy system are typically used to, all post-builds platforms incuding test, QA, UAT pre-production.
+	
+
+Continuous Monitoring :
+	It's an ongoing automated evaluation of workloads to monitor there health & function
+Production Monitoring :
+	include threat detection,, vulnerability detection, & malware prevention.			 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

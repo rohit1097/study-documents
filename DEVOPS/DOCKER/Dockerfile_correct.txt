@@ -1,0 +1,92 @@
+
+reference : https://www.youtube.com/watch?v=HyX_ECXIy-w&t=1174s
+
+
+Dockerfile
+
+
+FROM ubuntu
+RUN apt-get update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+RUN apt-get -y install apache2
+ADD . /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+
+
+
+
+
+ENV name Intellipaat 
+
+-------------------------------------------------------------------------------------------------------------
+
+index.html file
+
+
+<html>
+<body>
+<h1>CICD & Docker Tutorial By Rohit Patil :): </h1>
+<p style="background-color:DodgerBlue;">Version One (V2.0) in Blue Color.</p>
+</body>
+</html>
+
+
+---------------------------------------------------------------------------------------------------------------
+
+buildspec.yaml
+
+
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 825844616809.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t zigzag .
+      - docker tag zigzag 825844616809.dkr.ecr.us-east-1.amazonaws.com/demorepo:zigzag
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 825844616809.dkr.ecr.us-east-1.amazonaws.com/demorepo:zigzag
+
+
+
+---------------------------------------------------------------------------------------------------------------
+
+imagedefinitions.json
+
+
+[
+    {
+        "name": "web1",
+        "imageUri": "825844616809.dkr.ecr.us-east-1.amazonaws.com/demorepo:zigzag"
+    }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

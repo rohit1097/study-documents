@@ -1,0 +1,73 @@
+
+
+
+
+
+1> CREATE : create a resource from file (.json / yaml)
+	- kubectl create -f <filename>
+
+	- kubectl create deployment NAME --image=image --[COMMAND][ARGS..]     (creating deployement using images)
+	 EX.-  kubectl create deployment deploy1 --image=nginx --replicas=3
+
+
+2> GET : Used to print tha tables of most  imp information about specifies resources, u can filter using label selector  & the -- flag.
+	- kubectl get [resource name]
+	
+	- kubectl get pods 
+	- kubectl get pod --all-namespaces
+	- kubectl get nodes : ( to list available nodes )
+	- kubectl get deployements : ( to list available deployments after 'CREATE' )
+	- kubectl get -o wide ( returns information of pods in details )
+	- kubectl get services 
+
+
+3> EXPOSE : Exose a resource as a new kubernetes service.
+	    
+	   -  kubectl expose ( -f FILENAME | TYPE NAME ) [ --port=port ] [ --protocol=TCP|UDP|SCTP ] [ --target-port=number-or-name  [ --name=name ] [ --external-ip-of-service ] [ --type=type ]
+	   
+	   - kubectl expose deployment deploy1 --port=80 --target-port=8080 ( moving target from one to another port  )
+			
+4> DELETE : To delete resources
+	- kubectl delete([ -f FILENAME ] [ -k DIRECTORY ] | TYPE[( NAME | -l label | --all )])
+	
+	- kubectl delete -f abc.yaml
+	- kubectl delete pod (podname)
+	- kubectl delete pods --all
+	- kubectl delete pods,services -l name=mylable1
+	
+5> AUTOSCALE : Create an autoscaler automatically & sets the number of pods that run in a kubernetes cluster.
+		An autoscaler can automatcally increases & decreases number of pods deployed within the system as needed.	
+
+	- kubectl autoscale ( -f FILENAME | TYPE ANME | TYPE/NAME ) [--min=MINPODS] [--max=MAXPODS] [--cpu-percent=CPU]
+	
+	- kubectl autoscale deployement abc --min=2 --max=10
+	
+6> SCALE :  set a new size for deployment, repllica set, replication controller or statefullset.
+	    allows user, to specify one or more preconditions for the scale action.	 
+
+	- kubectl scale [ --resource-version=version ] [ --current-repicas=count ] --replicas=count ( -f FILENAME | TYPE NAME )
+	
+	- kubectl scale --replicas=4 deployment abc
+
+7> DESCRIBE : print the details description of the selected resources. including resouurces such as events or controllers.
+		
+		- kubectl describe ( -f FILENAME| TYPE [ NAME_PREFIX |_L Label ] | TYPE/NAME )	
+		
+		- kubectl describe pods/nginx
+		- kubectl describe abc 		  
+
+8> LOGS:  prints the logs for a container in a pod or specific resource. if the podd has only one container, the container name is optional.
+	- kubectl logs [ -f ] [ -p ] ( pod |TYPE?NAME)[-c CONTAINER ]	
+	
+	- kubectl logs -l app=nginx --all-containers=true
+	- kubectl logs abc
+
+9> EXEC:  Execute a command in Container.
+	- kubectl exec (POD|TYPE/NAME)[-c CONTAINER][flags] --COMMAND[args..]
+	
+	- kubectl exec abc(podname) --date
+	
+		
+	
+	
+	

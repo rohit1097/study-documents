@@ -1,0 +1,61 @@
+do we need to make chnage env filee
+
+
+
+
+
+ersdev dbuser name
+
+
+
+
+
+sudo mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u admin -p
+kkxMNv8suJe96JNb
+
+
+
+
+SELECT * FROM core_config_data WHERE path LIKE "%admin/url/%";
+update core_config_data set value = 'https://uat.eros.ae' where path like "%admin/url/%";
+ 
+UPDATE core_config_data SET value = 'https://uat.eros.ae/' WHERE path LIKE 'web/unsecure/base_url';
+SELECT path,value FROM core_config_data WHERE path LIKE 'web/unsecure/base%';
+
+UPDATE core_config_data SET value = 'https://uat.eros.ae/' WHERE path LIKE 'web/secure/base_url';
+SELECT path,value FROM core_config_data WHERE path LIKE 'web/secure/base%';
+
+
+
+
+
+sudo scp -i EROSDEVBahrain.pem <file name > ubuntu@15.184.210.244:~/
+
+
+
+
+
+mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u erosmagentouser -p  erosdigital <  db file name
+
+
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u deveros -p  < 
+
+
+update core_config_data set value = 'http://staging.eros.ae/' where path = 'web/secure/base_url';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

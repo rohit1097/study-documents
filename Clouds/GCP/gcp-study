@@ -1,0 +1,56 @@
+
+GCP:
+
+GCP has: 
+	- 35 regions
+	- 73 zones
+	- 134 edge locations
+	- 200+ contries & territories
+		
+storage : 
+	types
+	- multi regional
+	- regional
+	- Nearline
+	- coldline
+	
+{	
+gcloud compute intances create <cloudshell-name> --zone <zonename>			 
+gcloud config set project <project id>
+}
+
+** GCP compute services: (virtual machine) like ec2 
+	 server bases:
+	 - compute engine
+	 - k8s engine
+	 - VM ware engine
+	 
+	 serverless engine
+	 - app engine
+	 - cloud run
+	 - cloud functioner
+	 
+*gcp provide predefined and custome compute machine	 
+
+
+vm families:
+	- general purpose - E2, N1,N2,N2D, T2
+	- compute optimized- C2,C2D
+	- memory optimize- M1,M2
+	- accelarate optimized/GPU- A2
+	- shared core- 		 
+	- Sole tenant node- dedicated/reserve compute engine
+	
+Instance pricing
+	- sustained use discount (on-demand)
+	- committed use discount (reserverd instance)
+	- preemtible (spot instance) emty and non using server	
+	- sole tenant (dedicated host)
+	
+Persistent disk : persistent disk is a disk which can saave the data after the server hd been distroy, it can be attcahed to another server also. data can be recover by using persistent disk. 
+	- standerd PD
+	- Balanced PD
+	- SSD pd
+	- Extream PD
+	
+		

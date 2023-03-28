@@ -1,0 +1,29 @@
+* DOCKER  INSTALLATION
+
+6 apt install docker.io    7 clear    8 docker version 9 service docker status 10 clear 11 docker images 
+
+12 docker pull ubuntu 13 docker pull ubuntu:20.04 14 docker images 15 docker rmi ubuntu 16 docker images
+
+17 docker rmi ubuntu:20.04 18 docker images 19 docker pull centos 20 docker images 21 clear 
+
+22 docker images 23 docker save centos -o centos.tar 24 ls -alrt centos.tar 25 docker rmi centos
+
+ 26 docker images 27 docker load -i centos.tar 28 docker images 29 clear 30 docker images 
+
+31 docker run -it ubuntu bash 32 docker ps 33 docker ps -a 34 clear 35 docker run -d jenkins
+
+ 36 docker ps -a 37 docker restart competent_shaw 38 docker ps -a 39 history | tail -n 5 40 clear
+
+ 41 docker ps -a 42 docker stop competent_shaw 43 docker ps -a 44 docker start competent_shaw
+
+ 45 docker ps -a 46 docker kill competent_shaw 47 docker ps -a 48 docker rm competent_
+
+
+
+*  DOCKER - COMPOSE  INSTALLATION
+  
+   curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-linux-x86_64 -o /usr/bin/docker-compose
+  
+   chmod +x /usr/bin/docker-compose
+
+   docker-compose --version   

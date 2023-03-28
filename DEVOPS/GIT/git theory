@@ -1,0 +1,81 @@
+GIT
+
+it's a distributed version control system
+every developer clones a copy of the mail repository on their local system
+committing & retriving is faster
+everything except "pulling & pushing" can be done without internet.
+
+git lyfe cycle :
+
+stage 1 > Working Directory: 
+		- the place where your project reside in your local system
+		- the directory where we working is a working directory
+		- project can be tracked by git
+		- by doing "git init" it automatically creates hidden .git folder
+		- files are not tracked here
+		
+stage 2 > Staging Area :
+		- we have to specify which files have to be tracked from working directory
+		- to add files in staging area we used the command " git add "	
+		
+stage 3 > Commit :
+		- once file is selected & ready in the staging area, they can now be saved in repository
+		- saving files in repository of git is knwon as doing commit.
+		- commiting can be initialise by " git commit -m 'message' "
+		
+				
+
+*************************************************************************************************************************
+1> git init  : (git init)
+		- it's used create a repository using the command git init. Navigate to your project folder and
+		  enter the command git init to initialize a git repository for your project on the local system.
+2> git status :
+		- Once the directory has been initialized you can check the status of the files, whether they are
+		  being tracked by git or not, using the command git status.				
+3> git add :
+		- If we want to track all the files in the project folder, we can type the command,
+		  git add.				
+		  
+4> git push :
+		- To push the changes to your repository, enter the command git push origin <branch-name> and hit
+		  enter. In our case the branch is master, hence git push origin master. This command will then prompt
+		  for username and password, enter the values and hit enter.		  
+5> git pull :
+		- The git pull command is also used for pulling the latest changes from the repository, unlike git
+		  clone; this command can only work inside an initialized git repository. This command is used
+		  when you are already working in the cloned repository, and want to pull the latest changes,
+		  that others might have pushed to the remote repository git pull <URL of link>		  
+		  
+6> git branch :
+		- Until now, we saw how you can work on git. But now imagine, multiple developers working on
+		  the same project or repository. To handle the workspace of multiple developers, we use
+		  branches. To create a branch from an existing branch, we type
+		  git branch <name-of-new-branch>
+		--   Similarly, to delete a branch use the command git branch –D <branch name>		  
+		
+7> it checkout :
+		- To switch to the new branch, we type the command git checkout <branch-name>		
+			git checkout <branch-name>
+			
+8> git log :
+		- Want to check the log for every commit detail in your repository? You can accomplish that
+		  using the command git log.			
+		  
+9> git stash :
+		- To stash your staged files without committing just type in git stash. If you want to stash your
+		  untracked files as well, type git stash –u. Once you are back and want to retrieve working, type
+		  in git stash pop.		  
+		  
+10> git revert :
+		- git revert <commit-id> command helps you in reverting a commit, to a previous version.		  
+		
+		
+		
+11> git rebase :
+		- alternative for git merged command
+		- 		
+		
+		
+		
+		
+		

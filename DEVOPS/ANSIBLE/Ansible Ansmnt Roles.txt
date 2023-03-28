@@ -1,0 +1,202 @@
+Install Apache --> intall.yaml
+copy a HTML file --> configure.yaml
+Restart the apache service --> service.yaml
+
+
+
+*************************************************************************************************************
+*************************************************************************************************************
+START --->>>
+
+
+# Commands -->> 
+
+****************************************************************************
+STEP 1
+
+apt update
+cd /etc/ansible/roles
+apt install tree
+tree web
+ls
+
+sudo ansible-galaxy init apache
+sudo ansible-galaxy init nginx
+
+
+***********************************************************************************
+STEP 2
+
+ { In apache directory }
+
+cd apache
+ls
+cd tasks 
+
+nano main.yml
+---
+# tasks file for web
+- include: install.yml
+- include: configure.yml
+- include: service.yml
+
+
+nano install.yml      
+---
+  - name: Install Apache2
+    apt: name=apache2 update_cache=yes state=latest
+
+
+nano configure.yml    
+---
+  - name: Configure Website
+    copy: src=index.html  dest=/var/www/html
+
+
+
+nano service.yml       
+---
+  - name: Start Apache2 Service
+    service: name=apache2 state=started
+
+
+
+cd ..
+ls   (check files diretory)
+
+cd files
+
+nano index.html
+  <html>
+  <body>
+  <h1> WELCOME TO APACHE PAGE </h1>
+  </body>
+  </html>
+
+
+cd 
+{ APACHE PART CLOSED }
+
+
+***************************************************************************
+STEP 3
+
+
+{ IN NGINX DIRECTORY  }
+
+cd 
+cd  /etc/ansible/roles
+ls
+cd nginix
+ls
+cd tasks 
+
+nano main.yml
+---
+# tasks file for web
+- include: install.yml
+- include: configure.yml
+- include: service.yml
+
+
+nano install.yml      
+---
+  - name: Install Nginx
+    apt: name=nginx  update_cache=yes  state=latest
+
+
+nano configure.yml    
+---
+  - name: Configure Website
+    copy: src=index.html  dest=/var/www/html
+
+
+
+nano service.yml       
+---
+  - name: Start Nginx Service
+    service: name=nginx  state=started
+
+
+
+cd ..
+ls   (check files diretory)
+
+
+cd files
+nano index.html
+  <html>
+  <body>
+  <h1> WELCOME  TO  NGINX  PAGE </h1>
+  </body>
+  </html>
+
+
+cd 
+
+{ NGINX PART CLOSED }
+
+
+*************************************************************************************
+STEP 4
+
+cd
+cd /etc/ansible
+ls
+
+nano site.yml
+
+---
+- hosts: slave1 
+  become_user: root
+  roles:
+   - apache
+   
+
+- hosts: slave2
+  become_user: root
+  roles:
+   - nginx
+
+
+
+ansible-playbook site.yml --syntax-check
+ansible-playbook site.yml
+
+
+ -->> Now, go to browser & paste the public IP of both slaves instances, to watch the output
+
+*************************************************************************************************************
+*************************************************************************************************************
+
+
+ ### FOR KNOWLEDGE
+
+{{{{
+
+--> You need to use the below commands under /etc/ansible/roles for roles:
+
+sudo ansible-galaxy init apache
+sudo ansible-galaxy init nginx
+
+--> You need to use the  apache folder for the apache role and the nginx directory for the nginx role:
+
+--> After the role then you need to mention your main playbook in the below format to execute the role as per the instance.
+
+
+---
+- hosts: slave1
+  become_user: root
+  roles:
+   - apache
+   
+
+- hosts: slave2
+  become_user: root
+  roles:
+   - nginx
+
+
+--> This will execute the roles to run on servers accordingly.
+
+}}}}

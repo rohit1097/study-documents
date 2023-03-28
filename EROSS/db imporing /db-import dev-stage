@@ -1,0 +1,88 @@
+
+
+User: admin
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u admin -p
+Password: kkxMNv8suJe96JNb
+
+Dev user ===
+
+User: deveros
+sudo mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u deveros -p
+Password: yPFu9hLbWymQBuPc
+
+Stage user ===
+
+User: stageros
+sudo mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u stageros -p
+	      eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com:3306
+
+Password: eHGsrPKbU2XRB3Xm
+
+for dev
+http://dev.eros.ae/
+http://15.184.210.244/
+
+
+for stage
+http://staging.eros.ae/
+http://15.184.3.110/
+
+
+
+
+sed -i 's/`root`@`localhost`/`erosmagentouser`@`%`/g' file.sql
+sed -i 's/`root`@`localhost`/`stageros`@`%`/g' eroslive-2021-12-13.sql
+
+FOR DEV :
+
+GRANT ALL PRIVILEGES ON erosdev.* TO 'deveros'@'%';								
+
+GRANT ALL PRIVILEGES ON erosdev_storage.* TO 'deveros'@'%';
+
+
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u deveros -p erosdev < eroslive-2021-12-13.sql
+
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u deveros -p erosdev_storage < eroslivestorage-2021-12-13.sql
+
+
+
+FOR STAGE :
+
+GRANT ALL PRIVILEGES ON erosstag.* TO 'stageros'@'%';
+
+GRANT ALL PRIVILEGES ON erosstag_storage.* TO 'stageros'@'%';
+
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u stageros -p erosstag < eroslive-2021-12-13.sql
+
+mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u stageros -p erosstag_storage < eroslivestorage-2021-12-13.sql
+
+
+
+mysql -u root -p -P 3306 dbname < D:ab/cd/dump.sql     < source directory path > 
+{mysql -h eros-devstage-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u deveros -p erosdev < eroslive-2021-12-13.sql.gz}
+
+
+
+
+GRANT ALL PRIVILEGES ON eroslive.* TO 'deveros'@'%';
+
+UPDATE mysql.user SET Super_Priv='Y' WHERE user='user1' AND host='%';
+
+
+
+
+
+sudo chown -R root:root erosdigital/
+
+
+chown -R www-data:www-data apple.jpg
+
+
+
+
+location /eros_static {  # new url path
+   root /var/www/erosdigital/pub/eros_static/; # directory to list
+   autoindex on;
+}
+
+

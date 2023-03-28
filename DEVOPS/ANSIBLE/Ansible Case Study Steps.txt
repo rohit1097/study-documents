@@ -1,0 +1,63 @@
+            << ---  CASE STUDY  --->>
+
+  ( Lecture 7 in Devops training in intellipaat )
+ 
+   { First of all u need to launch ubuntu 18.04 instance only on which the follo comand can run. & execute  }
+
+
+-->> INSTALLATION ON MASTER TERMINAL
+
+apt-get install software-properties-common 
+apt-add-repository ppa:ansible/ansible 
+apt-get update 
+apt-get install ansible
+
+
+-->>  ON SLAVE TERMINAL
+
+apt-get update
+apt-get install python
+apt-get update
+python --version (for cheking installed or not)
+
+
+-->>  NOW ON MASTER TERMINAL
+
+cd .ssh
+ls       ( check authorized_key file is there )
+cat authorized_key
+ssh-keygen     (generating unique key)
+         ( Nothing has to do just press Enter 2-3 times)
+ls
+{check  id_rsa.pub  file is created or not/ its the imp file which having the unique key }
+
+cat id_rsa.pub
+   { copy the key }
+
+
+-->>  NOW ON SLAVE TERMINAL
+
+cd .ssh
+ls
+nano authorized_key
+   { paste the unique key you just copied at here & save the file } 
+
+
+-->>  NOW ON MASTER TERMINAL
+
+ssh root@(slave public ip)
+     ( EX.   ssh root@18.221.172.169 )
+
+       { ssh ubuntu@(slave public ip) } --> For ubuntu / if ur on root user use upper command
+
+
+          << -----------  END OF PART 1  ------------->>
+ 
+***************************************************************************************************************************************************************
+***************************************************************************************************************************************************************
+
+
+
+
+
+

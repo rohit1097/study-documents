@@ -1,0 +1,42 @@
+****  https://github.com/anujdevopslearn/Docker   {  intellipath expertn docker repo link }
+
+( https://github.com/anujdevopslearn/Docker/blob/master/Dockerfile )
+
+# DOCKER  IMAGE 
+   docker build -t phpcode  .      { image BUILDING cmnd}
+   docker run -it phpcode bash    { image RUN cmds}
+   docker tag phpcode anujsharma1990/phpcode     {  image Launch cmnd }
+
+
+
+# DOCKER CONTAINER
+    docker run -it -d ubuntu   (cont. building) 
+    docker ps (get cont ID)   
+    docker exec -it (cont. ID) bash  ( enter in cont.)
+                                     
+
+
+
+52 git clone https://github.com/anujdevopslearn/Docker.git 53 cd Docker/ 54 docker build -t phpcode .
+
+ 55 docker images 52 git clone https://github.com/anujdevopslearn/Docker.git 53 cd Docker/ 
+
+54 docker build -t phpcode . 55 docker images
+
+
+1 docker login     2 docker images      3  docker tag phpcode anujsharma1990/phpcode    4 docker images   
+
+5 docker push anujsharma1990/phpcode
+
+6 git clone https://github.com/anujdevopslearn/Docker.git    7 cd Docker/    8 docker build -t phpcode .  8 docker images
+
+9 history    10 docker login    11 docker images     12 docker tag phpcode anujsharma1990/phpcode     
+
+13 docker images  
+
+14 docker push anujsharma1990/phpcode    15 docker images    16 clear    17 docker images       
+
+18 docker run -d -p 80:80 phpcode          19 docker run -d -p 81:80 phpcode 
+
+20 docker ps     21  curl wgetip.com
+

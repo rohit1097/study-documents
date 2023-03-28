@@ -1,0 +1,39 @@
+
+
+
+    2  apt update
+    3  apt install net-tools
+    4  apt update
+    5  systemctl status redis.service
+    6  apt install redis-server
+    7  systemctl status redis.service
+    8  redis-cli
+    9  sudo nano /etc/redis/redis.conf
+   10  systemctl restart redis.service
+   11  systemctl status redis.service
+   12  redis-cli -h 10.0.2.204 ping
+
+
+
+
+{
+
+   Made changes in sudo nano /etc/redis/redis.conf
+    - set "protected mode no" from "yes"
+    - set "supervised systemd" from "no"
+     then
+    - added IP Address "bind 10.0.2.204"
+     to acces it using host ip
+ 
+  To Start redis-cli ::
+   - redis-cli -h 10.0.2.204
+
+
+  To check redis.service after every modification:
+	systemctl restart redis-service
+	systemctl status redis-service    	
+
+  To Stop Service.	
+	systemctl stop redis-service
+
+}

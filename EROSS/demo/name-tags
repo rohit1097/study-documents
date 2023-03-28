@@ -1,0 +1,74 @@
+
+
+Rgion = US EAST (Ohio us-east-2)  // BAHRAIN	
+
+VPC CIDR Range = 10.0.0.0/16
+
+Public Subnet CIDR Range ( us-east-2a )  = 10.0.1.0/24  ( bahrain-me-south-1a )
+Private Subnet CIDR Range ( us-east-2a )  = 10.0.2.0/24  ( bahrain-me-south-1a )
+Private Subnet CIDR Range ( us-east-2b )  = 10.0.3.0/24  ( bahrain-me-south-1a )
+
+
+VPC name = ITS-Ohio-test // ITS-Bahrain-Eros-Prod
+
+Public Subnet Name = ITS-Ohio-test-Public-2a //     ITS-Bahrain-Prod-Public-1a
+Private Subnet Name = ITS-Ohio-test-Private-2a //   ITS-Bahrain-Prod-Private-1a
+Private Subnet Name = ITS-Ohio-test-Private-2b  //  ITS-Bahrain-Prod-Private-1b
+
+
+Route Table = ITS-Ohio-test-public-RT  /// Route Table = ITS-Bahrain-Prod-Public-RT
+Route Table = ITS-Ohio-test-public-RT ///  Route Table = ITS-Bahrain-Prod-Private-RT
+
+
+Internet Gateways = ITS-Ohio-test-IGW  ///   ITS-Bahrain-Eros-Prod-IGW
+NAT GETWAY = ITS-Ohio-test-NG  ///           ITS-Bahrain-Eros-Prod-NAT
+ 					///   Elastic IP =  ITS-Bahrain-Eros-Prod-EI-NAT
+						
+
+
+Public Security Group= EROS-test-SG   //             Eros-Production-Public_SG  
+Private Security Group= EROS-test-private-SG   ///  Eros-Production-Private-SG
+
+EC2-WEB = eros-WebSvr-test-EC2    //  EROS-WebSvr-Prod-EC2  ( bastion bahrain )
+EC2-DB = eros-magento-test-2a-EC2 //  EROS-Magento-Prod-EC2  ( private bahrain )
+EC2-DB = eros-magento-test-2b-EC2
+
+
+
+
+RDS DB NAME = eros-test-RDS  
+mysql username = admin
+mysql password = admin123
+
+
+Subnet Group = eros-db-sg ///  Eros-Bahrain-DB-Subnet-Grp
+
+
+VPC RDS security group = Eros-RDS-VPC-Security-group  /// 
+ 
+ 
+ Target Group :
+ ITS-Bahrain-Eros-TG
+ 
+ Load balancer :
+ Eros-Bahrain-Prod-ELB
+ 
+ Load Balancer Target Groups :
+ Eros-Bahrain-Prod-ELB-SG
+ 
+ 
+ 
+DATABASE NAME = EROSDB1
+( RDS Connection) = sudo mysql -h eros-db-test-rds.cujwucybsefn.us-east-2.rds.amazonaws.com -u admin -p 
+
+
+root DB Password
+username = root
+bjmS4p5VzhgMPQ9N8fsjTGpt
+
+
+
+
+
+
+

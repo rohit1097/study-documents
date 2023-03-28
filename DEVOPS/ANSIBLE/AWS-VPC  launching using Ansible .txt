@@ -1,0 +1,239 @@
+links:
+
+Ansible installation steps :
+   https://www.coachdevops.com/2020/04/install-ansible-on-ubuntu-how-to-setup.html
+ 
+Youtube: 
+   https://www.youtube.com/watch?v=TT9mQe5YXiw
+   
+task steps :
+    https://www.infinitypp.com/ansible/create-vpc-ansible-aws/
+
+*****************************************************************************************************************************
+# Add Hosts #
+cd /etc/ansible
+sudo vim hosts
+
+[production]
+slave1 ansible_ssh_host=3.91.200.37 ( public IP of Host )
+
+*****************************************************************************************************************************
+
+ # install ansible on master:
+
+sudo apt install python3-pip -y
+sudo pip install boto boto3
+sudo apt-get install python-boto -y
+sudo apt-get install python3-boto3 -y
+pip list boto | grep boto
+
+
+
+ # install this commands on host :
+
+sudo apt install python3-pip -y
+sudo pip install boto boto3
+sudo apt-get install python-boto -y
+sudo apt-get install python3-boto3 -y
+pip list boto | grep boto
+
+
+
+*****************************************************************************************************************************
+On Master :
+
+sudo mkdir ansible/roles/
+cd ansible/roles/
+sudo ansible-galaxy init aws-vpc
+cd aws-vpc
+cd vars ( write playbook in main.yml )
+cd tasks ( write playbook in main.yml )
+cd ansible/roles/
+sudo vim vpc.yml ( write playbook )
+
+sudo ansible-playbook vpc.yml --syntax-check
+sudo ansible-playbook vpc.yml
+
+
+
+*****************************************************************************************************************************
+
+1> vars ( main.yml )
+
+---
+#vars/main.yml
+
+aws_access_key: " "
+aws_secret_key: " "
+region: "us-east-1"
+
+# VPC
+vpc_cidr: 10.10.0.0/24
+vpc_name: "Ansible VPC"
+
+# Subnet
+subnet_name: "Ansible Subnet"
+subnet_cidr: 10.10.0.0/26
+
+# Internet Gateway Name
+igw_name: "Traffic IGW"
+
+# Internet Getway Route Name
+route_name: "IGW RT"
+
+securitygroup_name: "Ansible Security Group"
+
+ec2_tag: "WebServer"
+
+#The local path to which we would save our EC2 Private Key
+ec2_key_directory: "ansible/roles/aws-vpc/"
+keypair_name: "ec2_key_pair"
+
+
+*****************************************************************************************************************************
+
+    
+2> task(main.yml)
+ 
+---
+
+ - name: create VPC
+   ec2_vpc_net:
+     name: "{{ vpc_name }}"
+     cidr_block: "{{ vpc_cidr }}"
+     region: "{{ region }}"
+     state: present
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+   register: vpc
+
+
+ - name: Set VPC ID in variable
+   set_fact:
+     vpc_id: "{{ vpc.vpc.id }}"
+
+
+ - name: associate subnet to the VPC
+   ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    cidr: "{{ subnet_cidr }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    map_public: yes
+    resource_tags:
+      Name: "{{ subnet_name }}"
+   register: subnet
+
+ - name: create IGW
+   ec2_vpc_igw:
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: "present"
+    tags:
+      Name: "{{ igw_name }}"
+   register: igw
+
+ - name: Route IGW
+   ec2_vpc_route_table:
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    subnets:
+      - "{{ subnet.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id  }}"
+    tags:
+      Name: "{{ route_name }}"
+
+
+ - name: Create Security Group
+   ec2_group:
+    name: Web DMZ
+    description: DMZ Security Group
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    rules:
+      - proto: tcp
+        ports:
+        - 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        ports:
+        - 22
+        cidr_ip: 0.0.0.0/0
+   register: security_group
+
+
+
+ - name: create a new ec2 key pair, returns generated private key
+   ec2_key:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    name: "{{ keypair_name }}"
+    region: "{{ region }}"
+   register: keypair
+   tags:
+    - ec2_key
+
+ - debug:
+      var: keypair
+   tags:
+    - ec2_key
+
+ - name: Copy EC2 Key Pair private key locally
+   copy: content= "{{ keypair.key.private_key }}" dest={{ ec2_key_directory }}key.ppk
+   when: keypair.changed == true
+   tags:
+    - ec2_key
+
+ - name: Create EC2 Instance
+   ec2:
+    image: ami-467ca739
+    wait: yes
+    instance_type: t2.micro
+    region: "{{ region }}"
+    group_id: "{{ security_group.group_id }}"
+    vpc_subnet_id: "{{ subnet.subnet.id }}"
+    key_name: "{{ keypair.key.name  }}"
+    count_tag: "{{ ec2_tag }}"
+    exact_count: 1
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+
+
+***********************************************************************************************************************************
+
+3> vpc.yml
+
+create outside role directory ( near beside role dir. )
+
+---
+- hosts: slave1
+  become_user: root
+  roles:
+   - aws-vpc
+   
+   
+   
+***********************************************************************************************************************************************
+
+-----BEGIN RSA PRIVATE KEY-----\nMIIEogIBAAKCAQEAqyDRyZfqtTbGtsotdAhJmCCZd54vkMDOsf17JLUH3Q/enGeX\nUuyp6AJdm930V+WXg9Jf5tjZ8jfOn8i7+opQ3a1zO3EkeJ4dpaJw+m7FgoAsIMqs\nIrImtVcDd1gAWkyUMYHw/3da8g/9ck8RP8KPo1x88urQ7l7ZYYjXrCmrhSHWqAiy\nYWJYcHYzAAE44rD2zOyG3a6OKWtKDHleCO2UatwfozUlcS8PGUvj3QnFVeKh+wJW\nJmGx5TN2ttB3pzw8RK/vJvdGYnVgBG7wNFFQaxuC9F7IY5FNsx2EKbvFqPySNYGH\n7FBtA4F1/S5YoSCZO9EQpiyXMUZ0vjiUipYs2QIDAQABAoIBAEit5auS49IW84qK\nj4dqRadgoQ1Wl6kI2kBqAbTzVeWjac5PiMtlTDwHVS5vs+joz9LitGxcySPAY/ck\n0AF2YSXlFr22LeE0di70sLsL9MKaISPEMBuEQkBeNlCnhW7Ue1QTdgFp9aw88k1s\nG01TGqItE7wv0pCKpBRyg/bQs9IUfUPN4utsYmUKtBUYr4Kjh6bKV/TzlXsqFh0e\n5HVJSW585pbfKni6Wnq8qLy1GJnJ6CabP90+w5N7uFf//mLMSACAzsqO86SvNjrD\nAGu2Qdtq5pvnOSg0uQ89skx+T/xPF/LA8KFosoqnPQvrroWPzkDlhtaPp8MjB7S4\nF6GQqSECgYEA03g7EohSnZHGSt3jPYey6v9KBT+wnCBBoxKp4d2tpxRpP8OsEHad\ny78LOrrosKEZzYz6llvqEoGvp5NFxrMkdInc1c3KHkpsFgTqNh6u+YltdcVshoUU\n4OPEgMz3CJ1VLbfIzyYRFpBjLBwrq7zV1K7/Cq/43nOHSC5Y47jeoS0CgYEAzynj\nTiBURUJNmEPYl1lrU6Z47WFUi0aWOY15dOIKdx3YT8603hb60c9ckgRUy4FZGbyQ\nJF5yicETv/KEP9+hu82BmSk5PXjSWpcnU2X567wqferjIIZNeE6YhB+/WCmzdQeG\n6hZrAeBioL8s/2Y2GAAtD7qBqEVFqzsOr6Ukzd0CgYB4rexILzO2aDJZFzdPLdmU\n8gsz45zN/Dp47XW1R+SJrMRDd08CNi7mzyeBZJjV85neC84VcG6sEQZFA26WbjUn\nrGUyPjZSAvabukJOkEQac6rbwsakHd5EWLcTKeTwLZkmdfNLA9ZMoil2Sr1BTIpa\nzWMOnk3P5O4W6xwfGKk0IQKBgD59ezSg6equcmug45/b+FUWXVn1xyPwGfaoZ1/L\no66E0TBZwRNRST2q2Fivd8ifbvoleDGQT+qf1E5NYHlIAyh8eEB0P/D8Fi//cnxk\nwXvLmeG7zeGMwaetxbHtRbHZemmt6JOKSaMaRYYJxRARi/W3b+BTuTLCGp7pRKfV\nIAH9AoGAIT0NojmALrdGDf16hHum98z24ljehoPKVN6p9aV/6hUu+N7R+aACWSut\niGU++v3asYd30FjVJmq0H2IfofLR0NR4Ka7eiqA4lCKKTDtXjs0IyFFJbSI7iIND\nZC+q/W9ZSmdO5p0+qcJ3q9GcRaLW9Lw9J1cEE5KvNSuEyC6tWUM=\n-----END RSA PRIVATE KEY-----
+
+
+***************************************************************************************************************************************************************************************
+             
+
+
+   
+       
+   
+   
+   

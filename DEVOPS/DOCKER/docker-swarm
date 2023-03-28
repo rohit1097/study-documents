@@ -1,0 +1,48 @@
+
+
+
+ DOCKER SWARM --
+ 
+ # ON- MASTER
+ - docker swarm init --advertise-addr=3.91.223.221 ( ip-address of main/master node )
+ 
+  { then it added as a respective instance to docker swarm master node,
+   and gives a command there, u have to add & fire that command to a new instance. to add that instance as a docker swarm node/slave. }
+ - docker swarm leave --force ( use to leave if master is already a part of master )
+ - docker node ls ( to check added nodes  list)  
+   
+ # ON-SLAVE ;
+  - install docker 
+  - hit command copied from master
+  
+  
+***************************************************************************************************************************************************************
+      
+    CREATING SWARM SERVICES
+  # ON-MASTER
+    
+ -  docker service create --name nginx --replicas 3 -p 80:80 nginx  (to create any service/ creates image and container )
+ - docker service ls  (check services just created) 
+ - docker images
+ - docker ps -a
+ - docker service rm (id)  
+ 
+  # ON-SLAVE 
+  
+  - docker ps -a
+  - docker images
+ 
+ ( go to browser and put ip of both master/slave abd check execution of nginx )
+   
+   
+ ***************************************************************************************************************************************************************
+ 
+ 
+ DOCKER NETWORK ;
+ 
+ - docker network create --driver overlay net1  ( creating n/w )
+ - dockr network ls ( show n/w )
+ - docker service create --name website --replicas 3 --network net1 -p 8000:80 hshar/webapp  ( attaching n/w to cont. )
+ -  
+   
+   

@@ -1,0 +1,37 @@
+
+
+
+
+SELECT CustomerName, City FROM Customers;
+
+SELECT * FROM Customers WHERE Country='Mexico';
+
+SELECT user, host, account_locked, password_expired FROM user;  (list user)
+
+ SELECT name,type_desc FROM sys.sql_logins
+
+CREATE DATABASE DBname;
+crete table table name;
+DROP DATABASE databasename;
+DROP USER 'test'@'localhost';
+
+BACKUP DATABASE databasename TO DISK = 'filepath'; (bachup db)
+
+ALTER TABLE Customers ADD Email varchar(255); (add, delete, modify)
+ALTER TABLE table_name DROP COLUMN column_name;
+
+user craetion:
+
+CREATE USER user1@localhost IDENTIFIED BY 'abcd';
+SHOW GRANTS FOR user1@localhost;
+
+GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost';
+GRANT SELECT, INSERT, ALTER ON HumanResources.Employee TO Manager;
+GRANT SELECT, INSERT ON database_name.* TO 'username'@'localhost';
+
+CREATE LOGIN JordanS WITH PASSWORD = 'pass123';
+
+
+import db:
+mysql -u root -p -P 3306 dbname < D:ab/cd/dump.sql     < source directory path > 

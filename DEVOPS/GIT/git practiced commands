@@ -1,0 +1,13 @@
+1 sudo apt-get update 2 clear 3 git init 4 git clone " https://github.com/rohit1097/gitrepo.git " 5 ls 6 cd gitassign 7 ls 8 sudo nano 1.txt 9 git add . 10 git commit -m "added" 11 ls 12 git branch 13 git branch f1 14 git branch 15 git checkout f1 16 ls 17 sudo nano 1.txt 18 git add . 19 git commit -m "added feature1" 20 cat 1.txt 21 git branch 22 git checkout master 23 git branch f2 24 git branch 25 git checkout f2 26 ls 27 sudo nano 1.txt 28 git add . 29 git commit -m "added feature2" 30 cat 1.txt 31 git branch 32 git checkout master 33 git merge f1 34 git add . 35 git merge f2 36 git mergetool 37 git add . 38 git commit . 39 git commit -m "added" 40 git branch 41 cat 1.txt 42 git push origin master 43 git push origin f1 44 git push origin f2 
+
+1 sudo apt-get update 2 sudo nano 1.txt 3 git init 4 git remote add origin "https://github.com/kritika1231/gitworkflow.git" 5 git remote 6 git add . 7 git commit -m "initial commit" 8 ls 9 git branch 10 git branch f1 11 git branch f2 12 git branch release 13 git checkout f1 14 sls 15 ls 16 sudo nano 2.txt 17 git add . 18 git commit -m "f1 added" 19 ls 20 git checkout f2 21 ls 22 sudo nano 3.txt 23 git add . 24 git commit -m "f2 added" 25 ls 26 git checkout release 27 ls 28 git merge f1 29 git merge f2 30 ls 31 git add 32 git add . 33 git commit -m "merged" 34 ls 35 git checkout master 36 git merge release 37 ls 38 git add . 39 git merge -m "a" 40 git commit -m "a" 41 ls 42 git branch 43 ls 44 git push origin master 45 git push origin f1
+
+46 git push origin f2 47 git push origin release 48 git branch hotfix 49 git checkout hotfix 50 ls 51 sudo nano 3.txt 52 git add . 53 git commit -m "bug fixed" 54 git checkout master 55 git merge hotfix 56 history
+
+git clone "https://github.com/kritika1231/merge-conflict.git" 65 ls 66 cd merge-conflict 67 ls 68 cat main.c 69 git checkout feature1 70 ls 71 cat main.c 72 git merge master 73 git mergetool 74 git add . 75 git commit -m "added security patch" 76 cat main.c 77 git checkout feature2 78 ls 79 cat main.c 80 git rebase master 81 git mergetool 82 git rebase --continue 83 git add . 84 git commit -m "added security patch" 85 cat main.c 86 git checkout master 87 git merge feature1 88 git merge feature2 89 git mergetool 90 git add . 91 git commit -m "merged" 92 cat main.c 93 git push origin master 94 histort 95 history
+
+
+
+
+
+

@@ -1,0 +1,141 @@
+{{
+# IMPORTANT:
+
+FOR EROS FTP : FILES = 664 & DIRECTORIES = 775
+
+find /var/www/erosdigital/ -type f -exec chmod 664 {} \;
+find /var/www/erosdigital/ -type d -exec chmod 775 {} \;
+::command to change all files permisions at a time
+}}
+
+
+
+
+## FTP NEW USER ADDING PROCESS VIA SSH KEY FILE :-->>
+-------------------------------------------------------
+
+Step 1: Add user 
+	adduser erostaging
+
+Step 2: give password
+ 	erostaging
+
+Step 3: moving into new user
+	 su <newusername>
+
+Step 3: Create a ssh key
+	mkdir .ssh
+	ssh-keygen
+	give key name: erostaging
+	
+Step 4: ll
+
+step 5: Erostaging and erostaing.pub file may get created. and .ssh file will be there.
+	move erostaging to .shh
+	mv erostaging .ssh
+	ls
+	cd .ssh
+	ls
+
+Step 6: Create a new file 
+	sudo nano authorized_key
+	cat erostaging.pub
+	:copy the conent from erostaging.pub file and paste it in authorized_key file
+	ls
+	exit
+
+step 7: Copy private key content and save it to tour local 
+	craete a .ppk & .pem file in local laptop and save it. 
+
+
+step 8: ssh to the user
+	:ssh -i "<file.pem>" <username>@public-ip-add of stage instance	
+	ex.> ssh -i "erostaging.ppk" erostaging@public-ip-add of stage instance
+	
+Step 9: import the ssh file in file zilla
+	Edit--- setting-- sftp-- add key file-- OK	
+	
+	
+step 10: Now we can access the user from file zilla by giving deatils like 
+
+Host: public ip
+usrename: erostaging
+password: -
+port: 22
+
+====================================================================================================================================
+
+# GIVE THE PERMISTION TO FILES AND DIR OF OWNER/USER :--> 
+
+: add the user in ubuntu group
+	: usermod -a -g <groupname> <username>
+	> usermod -a -G ubuntu erosftp
+	> id <username> :check groups added or not.
+	
+: change the owner of files/dir if needed
+	> chown -R <owner-name> <usrname>
+	> chown -R www-data:www-data erosftp
+	
+====================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+FTP users details: 
+
+For DEV::
+User name: erosdigital
+host IP:  15.184.210.244
+port :  22
+Key file: erosdigital.ppk
+
+For stage::
+User name: erostaging
+host IP: 15.184.3.110
+port : 22
+Key file: erostaging.ppk
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+>>FOR KNOWLEDGE ::
+-------------------
+
+
+Step 1 :
+
+Installation of nfs-kernal-server on prod 
+Installation of nfs-common on basion
+
+Step2 ::
+
+Sharing the folder "n1h8o2j" in between both nfs kernal & commom, which is Prod and bastion.
+adding permition for only read and write.
+
+Step 3 ::
+
+Installation of SFTP on bastion server
+
+Step 4 ::
+giving ftp access of bastion to client
+
+
+sudo apt update
+sudo apt install vsftpd
+sudo service vsftpd status
+sudo ufw allow 20/tcp
+sudo ufw allow 21/tcp
+sudo ufw allow 40000:50000/tcp
+sudo ufw allow 990/tcp
+sudo ufw allow openssh
+sudo ufw enable
+sudo ufw status
+

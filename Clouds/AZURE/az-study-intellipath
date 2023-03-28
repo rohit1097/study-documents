@@ -1,0 +1,45 @@
+
+
+
+microsoft azure:
+
+- azure access methods:  azure-portal, azure windows-powershell, azure CLI. 
+
+Core Domains provided by AZ
+
+1> Compute
+2> networking
+3> storage
+4> Database:
+
+
+COMPUTE: 
+	- Virtual machines : IAAS, to launch linux, windows intances.
+	- App Service: PAAS, provides already setup environments for devlopers, for hosting amd managing applications. 
+	- Function App: we can run a code or function without having to manage underlying resource service.
+	- AZ k8s service: orchestration service, to handle micro-service based application.
+
+NETWORKING:
+	- Virtual networks: logically isolated nw. like VPC.
+	- load balancer: distributing traffic among multiple virtual machines.
+	- application gateway: web traffic LB, to mange traffic to their web applications	
+	- DNS Zones: Domane hosting service. managing dns records.
+	- CDN Profiles: content delivery nw, stores cache on different region , for easy and quick access. 
+	
+STORAGE:
+	- blob : object type storage, to store structure /unstrucure data. 
+	- file storage: to store SMB (server message block) protocol. 
+	- tables: to store data in structured row/colums format. it store no-sql DB, so it stores non-relational data. 		
+	- queues: stores large number of messages, can be access workldwide from http/https.
+	- data lakke storage: it is a enterprise-wide/hyper-scale repository. stores any size of data. 
+	- data box: to move data to AZ quickly. used to tranfer data from AZ/to AZ quickly. 
+	
+DATABASE:
+	- SQL database: SQl servers on AZ cloud, create/scale/extend application using mysql server.
+	- CosmosDB: NO-sql-DB service. to implement a subset of sql-select statement on json documents.  
+	- Data Factory: fully manage service for data storage processing.
+	- Data Lake Analytics: scalable data storage and analytic service for big data analytics workloads,that require developers to run massively parallel queries.
+	
+	
+	
+		

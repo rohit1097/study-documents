@@ -1,0 +1,252 @@
+
+
+
+Terraform is a IAC tool
+
+IAC: infrastructure as a code
+
+IAC is a managing and provisioning managemnet.
+	Managing: to manage, create, delete, replacement
+	Provisioning: resource allocation / allocating
+
+Two ways to approach for IAC:
+
+Imparetive: comands need to execute in a sequence manner, one by one its executes to get the correct output
+
+Declarative: no need to be in sequence manner, its define in desired state, including what resource you need and properties they should have, by this IAC tool will configured for you.
+ 	     - Terraform is a Declarative manner.
+
+
+* Terraform is a infrastructure management tool. using HCL language(hashiorp configuration languagge)
+* Ansible, Chef, Puppet are confuguration management tool.
+  primarily designed for to installing, managing the software on an existing servers.
+  
+* Terraform has two important components: Terraform Core and Terraform Plugins  
+  
+- terraform has reusable code.  
+
+
+* PROVIDERS: (aws,gcp,azure)
+	- it is responsible for understading API interactions and exposing resources. if API is available u can create providers.
+	
+* terraform init:
+	- to make providers available, need to hit terraform init, 
+	- tf init will download all required plugins for providers.
+	- init will initialise working directory, consisting all required cofiguration files.
+	- init never delete existing configuration state .
+
+* terraform validate:
+	- validate your code. code is valid or not.
+	- checkout errors and also syntactically.
+	
+* terraform plan: 
+	- creates an execution plan
+	- determines what action needs to takes 
+	- achive desired state specified in a configuration file.
+	
+* terraform apply: 
+	- apply changes on providers
+	- make changes to reach out the desired state.
+	- it will execute the plan.
+	
+* terraform destroy:
+	- use to destroy the complete infrstrure created by terraform only.	 		
+	- to delete specific resouarce
+		: terraform destroy -targate <resorce type> . resoarce_view	
+		
+		
+	
+* terraform import : to make change in already created infrastructure.	
+	- also we can recreate tfstate file by import command. 
+
+* terraform refresh : to update the tfstate file, with actual state of infra.  
+	
+blocks: 
+	- complete code inside bracket {}
+	
+arguments:
+	- writes data in key value pair			
+	- ex. : ami = "ami-id"	
+		key_name = "abc.pem"
+		instance_type = "t2.micro" 
+
+expression:
+	- represent compute value, it will be string/value.
+	- ex.:  <identifier > = <expression>
+		ami = ami-id
+
+
+
+______________________________________________________________________________________________________________________________________________________________________________________
+
+** TERRAFORM MODULES:
+
+	- Modules are nothing but the reusable code of terraform file.	
+	- set of instruction and parameters.
+	- where we can create a multiple infrastructure using same code
+	- need to add the path of module or code file in the new tf file. and apply it
+	- root, publish, child module, parent module.
+	
+		- root module is a default module.
+		- all uesr can able to acces is a publish module
+		- child module can be call from root module.
+
+:files in one module : 
+		vpc -> data.tf, main.tf, provider.tf, variable.tf 
+
+
+______________________________________________________________________________________________________________________________________________________________________________________
+
+(reference: https://www.youtube.com/watch?v=oB7l8GOpVaY&list=PL7iMyoQPMtAOz187ezONf7pL8oGZRobYl&index=3)
+
+Terraform Variables:
+
+	- variables are used to create a calling file, from which we can call the resource management from our resource/main file.
+	- type = sring, number, list, bool, map(string)
+	
+	- call by: count = var.instance_count
+ex.
+ 
+variable "instance_count" {
+  description = "EC2 instance count"
+  type        = number
+  default     = 2
+}
+
+
+-variables.tf
+	variable "instance_type" {}
+	variable "env_name" {}
+
+-tfvars : for multiple environments.
+-stage.tfvars:
+	instance_type={t2.micro}
+	environment="stage"
+	
+	: PORTS -[22,80,8080]
+	  image_id= "AMI-028383"
+	  instance type= "t2.micro" 	
+
+
+______________________________________________________________________________________________________________________________________________________________________________________
+
+
+Terraform Locals:
+	- To differentiate the environment(stage/prod) in a code and can be able to make changes easily. 
+	- just need to add local in main file, and changes in tags of resources it will make changes in resources.	
+
+ex.
+	- locals{staging_env ="staging"}
+
+	-in tags of resources.
+	 tags - {  Name= "${local.staging_env}--vpc-tag"  } 	
+	
+
+______________________________________________________________________________________________________________________________________________________________________________________
+
+Terraform Provisioners:
+
+	- Terraform Provisioners are used to perform custom actions and tasks either on the local machine or on the remote machine.
+
+provisioner "file" {
+   source      = "/home/rahul/Jhooq/keys/aws/test-file.txt"
+   destination = "/home/ubuntu/test-file.txt"		
+   
+______________________________________________________________________________________________________________________________________________________________________________________
+   
+Terraform Workspace
+	- Terraform worksapces is a concept where you can have multiple states of your infrastructure configuration. 
+	- If you are running an infrastructure configuration in dev environment then the same infrastructure can be run in the prod environment.
+	- if workspace is not created then terraform configure in default workspace, (default workspace is always there)
+
+- terraform workspace list (to list available workspaces)
+- terraform workspace new dev/prod (to create new workspace)
+- terraform workspace show (show active workspace)
+- terraform workspace select dev (select workspace)   
+   	
+______________________________________________________________________________________________________________________________________________________________________________________
+
+Data Source:
+   	- to get back any information of the resoarce from the aws data source is use.  	
+   	
+______________________________________________________________________________________________________________________________________________________________________________________
+
+
+terraform functions:
+ 
+ 	- built-in, reusable code blocks that perform specific tasks within Terraform configurations.  	
+   	- funtion types : numeric, string, date-time, collection 
+   	
+   	- join, upper, lower, tital, max, min, altrue, compact, zipmap
+   	
+   	ex. zipmap ([1,2][a,b])
+   		{ 
+   		   a = 1
+   		   b = 2
+   		}
+   	
+
+______________________________________________________________________________________________________________________________________________________________________________________
+   	
+terraform taint:
+	- taint used to drgrade or damage the resource and to replace the new resource by it
+	- terrafrom taint aws_secu_grp.abc (resource-name)
+	
+	- terrafrom apply --replace (recomended)   	
+
+______________________________________________________________________________________________________________________________________________________________________________________
+   	
+
+tfstatefile : currunt status of your infrastucture   	
+   	
+terraform lifecycle   :
+
+	- its a nested block that can apply within a resoarce block.
+	- lyfecycle blck contains of meta args, available for all blocks.
+	- arguments avaible in lyfecycle blocks are, 
+			- create before destroy, 
+			- prevent destroy
+			- ingnore changes
+			- replace trigger by
+			 	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	
+   	

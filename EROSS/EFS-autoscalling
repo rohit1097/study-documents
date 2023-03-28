@@ -1,0 +1,222 @@
+
+## NFS SERVER INSTALLATION AND CONFIGURATION.--->>>
+   -----------------------------------------
+
+Step 1:  INSTALLATION
+
+apt update
+apt upgrade -y
+apt-get install nfs-kernel-server
+apt update
+systemctl status nfs-kernel-server
+
+
+Steps 2:  Create directory/file you want to share ith NFS :
+
+mkdir /public 
+mkdir /private  
+chmod 755 /public  (read only)
+chmod 777 /private (read write )
+
+
+Step 3:  Make changes in /etc/exports file
+
+nano /etc/exports
+:: ADD LINES
+/root/mnt/public *(ro,sync,no_subtree_check,no_root_squash)
+/root/mnt/private *(rw,sync,no_subtree_check,no_root_squash)
+
+/var/www/html *(rw,sync,no_subtree_check,no_root_squash)
+
+
+Stet 4: Test export file correct or not AND Restart
+
+exportfs -arvf 
+systemctl restart nfs-kernel-server
+systemctl enable nfs-kernel-server
+systemctl status nfs-kernel-server
+
+
+Step 5: MOVE TO CLIENT SERVER ::
+
+apt update
+apt upgrade -y
+apt-get install nfs-common
+nano /etc/fstab 
+
+Step 6: check nfs server mountable or not.
+
+showmount -e < IP address >
+
+Stepp 7: Create Directory/file where you want mount NFS 
+
+mkdir /public 
+mkdir /private  
+
+
+Step 8: MOUNTING COMMANDS :
+
+mount -t nfs <IP>:source/path /destination/path
+
+	EX: mount -t nfs 0.0.0.0:/public /mnt/public
+
+
+mount -t nfs 10.0.2.185:/var/www/erosdigital /var/www/erosdigital
+
+
+mount -t nfs 10.0.2.185:/var/www/erosdigital /var/www/erosdigital
+
+UN-MOUNTING COMMANDS :	
+umount path/to/file
+
+umount -l /var/www/html 
+umount -f /var/www/html 
+
+
+umount -l /var/www/erosdigital 
+umount -f /var/www/erosdigital 
+
+
+[
+for knowledge:
+sudo scp -i "ErosProdBahrain.pem" /var/www/erosdigital/nfstesting ubuntu@10.0.2.185:/var/www/erosdigital/
+##RSYNC COMMAND TO COPY DATA FROM ONE SERVER TO ANOTHER:
+rsync -avL --progress -e 'ssh -i ~/.ssh/.ssh/ErosProdBahrain.pem' /var/www/erosdigital ubuntu@10.0.2.185:/var/www/eros
+]
+
+Spet 9:  TO MOUNT NFS PERMANANTLY ::
+
+:Go to fstab file and aad the line for permanant nfs file mounting
+nano /etc/fstab
+
+<IP>:/source/path  /destination/path nfs defaults,_netdev 0 0
+
+	EXAMPLE:	
+		10.0.2.187:/root/mnt/public /root/mnt/public nfs defaults,_netdev 0 0
+		10.0.2.187:/root/mnt/private /root/mnt/private nfs defaults,_netdev 0 0
+     : MOUNT ALL
+      	 mount -a
+
+
+REFERENCE :
+https://www.youtube.com/watch?v=SpYTsRk3Dkk
+	
+
+******************************************************************************************************************************************************************
+
+
+## EFS CONFIGURATION ::---->>
+   -------------------------
+step 1 :
+	- Configure EFS file system on AWS Console.
+	
+step 2 :
+	- Go to attach option & select an "Mount via IP" option   	
+	- select an availability zone in which your ec2-instance is present
+	- select & copy the mounting command.
+
+
+Step 3 :
+	- add security groups of the server where you want to mount the efs
+
+	
+step 3 :
+	- Go to ec2-server & SSH connect it
+	- fire the following commands to install the efs prerequisites	
+		- sudo apt-get -y install nfs-common
+Step 4 :
+	- Mount the EFS using the comand you copied from the Attach option	
+	- Remember mount EFS on the directory/folder you want to share with respective servers.  
+	 	- < MOUNT VIA IP COMMAD >
+	- Check EFS mounted succsesfully or not.
+		- df -ah
+		
+		
+step 5 :
+	## - TO MOUNT THE EFS PERMANANTLY ON THE EC2-SERVER. :-->>
+		
+	- Edit the fstab file and add the below command. To edit the file use the command below.
+		- sudo vi /etc/fstab 
+	- Add the contect in th file.
+		- <domain from the mount command from mount via ip option>:/< path to mount dir/folder> nfs defaults,_netdev 0 0
+		
+		EX. :- fs-d3e98219.efs.eu-west-1.amazonaws.com:/ usr/bin/efs nfs defaults,_netdev 0 0
+	
+	- test the mounting is working perfect on not
+		- sudo mount -fav
+
+	- Check again, EFS is mounted succsesfully or not.
+		- df -ah
+
+	- To unmount the EFS use below comand. (optional) 
+		- umount -f /usr/bin/efs
+
+******************************************************************************************************************************************************************
+
+
+## AUTOSCALLING CONFIGURATION::----->>>
+   ---------------------------------
+
+# Taking AMI 
+
+step 1 :
+	- Go to respective ec2-instance which you want to automate and select image & templates from Actions.
+	- create an Image with the require additions if any...otherwise keep default and save. with AMI, snapshot is also gets created automatically.
+	- go to AMI's tab and check image is created or not, also check snapshot.
+	- if image is there, then copy the the ID for further autoscalling process   
+
+
+# Creating Launch Templates :
+
+step 2 :
+	- go to launch templates tab and select create new launch template
+	- select the AMI-ID you created before.
+	- make the other configuration as well if required 
+
+# USER-DATA:
+
+#!/bin/bash
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo mkdir usrdata
+sudo apt-get install nfs-common
+sudo mount -t nfs 10.0.2.80:/var/www/html /var/www/html
+
+
+# Creating Autoscalling :
+
+Step 3 :
+	- Go to Autoscalling tab and select create new autoscalling
+	- Select the respective template you created, vpc & all configuration and create an autoscalling groups.
+	- check on ec2 servers is launching atomatically or not.
+
+#EFS checking 
+
+step 4 :
+	- SSH the autoscale instance and check the EFS is mounted automatically or not..
+		- df -ah
+		- du -ah --max-depth=1 /  ( for file size checking  ) 
+		
+		
+******************************************************************************************************************************************************************
+
+******************************************************************************************************************************************************************
+
+## EROSDIGITAL FOLDER DATA MOUNTING/TRANSFERRING TO EFS FROM SERVER
+   ----------------------------------------------------------------
+
+
+STEP 1 :
+	- move data from server to EFS .
+		<   rsync -avL --progress -e 'ssh -i ~/.ssh/.ssh/ErosProdBahrain.pem' /var/www/erosdigital ubuntu@10.0.2.185:/var/www/eros  > 	
+
+		 rsync -arvh --progress /var/www/efs-test/ /var/www/erosdigital/
+
+
+ ex. rsync -arvh --progress /var/www/erosdigital_bkp/ /var/www/erosdigital/
+
+	
+		
+		
+		
+		

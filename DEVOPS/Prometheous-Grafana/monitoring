@@ -1,0 +1,101 @@
+log monitoring kibana
+
+insfrastucture mo. - prometheous for fetching 
+
+kibana for showing and visualization
+
+
+
+Promitheus :
+- work as Collection agent
+- metric monitoring solution, which collects data from Endpoints
+- uses promQL query language.
+- Loki tool can be use with grafana for log monitoring.
+- when data is get stores inside premotheous local storage, we can Visualize & creates Dashboart it using Grafana.
+Features :
+	- Multidimentional Data Maodel
+	- PromQl
+	- Service discovery ( discovers service & collects data )
+	- time series collection via pull model 
+	- No relience on distributed model. ( data store on Local Storage not on distributed storage )
+	- Alert Manager 
+Prometheous server has three parts of working Process :
+Retrival Part :
+	- Pulls metric data	
+Storage Part :
+	- Stores metric Data
+HTTP Server Part :
+	- Accept Queries		
+		- Prometheous web GUI
+		- Alert Manager
+Prometheous metrics & its types:
+	- Counters:
+		- records a value that only goes up
+		- Query how fast the value is increasing
+	- Gauges:
+		- records a value that only goes up and down
+		- Do not have to query its rate
+			
+	- Histogram:  
+		- Take many measuremenet of a value, to later calculate averages or percentiles.
+		- You know what the range of values will be up front, so you define your own.
+
+
+NODE-EXPORTER :
+	- USE TO COLLECT DATA FROM MULTIPLE SERVERS/NODES, to prometheos server
+	- can be connect with prometheous server by exported-config.yaml file
+	- need to add ip of that server in this file.
+	
+
+
+
+Grafana :
+- visualization agent
+- real time continuous monitoring.
+- creates Dynamic dashboards
+- Explore metrics & Logs ( promethoes, Logs )
+- Loki tool can use with grafana for log monitaring.
+
+
+
+
+
+Nagios is a fast monitoring tool, which involved both log and infra monitoring. 
+
+but on prometheous we can configure infrastructure monitoring only, for log monitoring we have to add other log monitoring exporter, also need to configure grafana-loki with prometheous.
+also the visualization is quite good at prometheous-grafana.
+
+Both the tools are mostly used as monitoring tool.
+
+
+
+
+
+
+
+#INSTALLTION OF GRAFANA ON 20.04.
+
+BLOG :
+
+https://computingforgeeks.com/how-to-install-grafana-on-ubuntu-linux-2/
+
+
+
+{{
+
+sudo apt-get install -y apt-transport-https
+sudo apt-get install -y software-properties-common wget
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+deb https://packages.grafana.com/oss/deb stable main
+sudo apt-get install grafana
+sudo systemctl start grafana-server
+sudo systemctl status grafana-server
+sudo systemctl enable grafana-server
+
+}}
+
+
+
+
+	 

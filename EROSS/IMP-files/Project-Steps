@@ -1,0 +1,209 @@
+
+
+1. Select AWS region
+2. setup VPC
+3.  setup public subnet
+4. Setup private subnet
+5. setup route table, internetGateway
+6.  setup bastion host
+7. create1 magento  server in private subnet
+8. connect magento server from bastion host 
+9. deploy magento app on magento server
+10. configure Launch template
+11. configure auto scaling
+12. configure Load balancer
+13. configure WAF
+14. configure cloundfront
+15. configure rout53
+
+1. Always user IAM user to create architecture
+2. Give proper naming tag
+3. Select right instance size
+
+
+
+********************************************************************************************
+
+
+STEP 1 :
+
+:- select aws region = OHIO
+
+step 2 :
+	Created VPC for EROS = (cidr)
+	Created Subnet for EROS = (cidr)
+	Created Security groups for public/private = (cidr)   
+	created route table public/private Subnet =
+	create internet gw & NAT gw
+	attached IGW to Public subnet
+	attached NAt GW to Private subnet
+	
+Step 3 :	 
+
+	Launch EC2 Instance for ubuntu 20.04
+	( 1 bastion Public & 2 Private Magento )
+	
+	Connection in between them through SSH KEY
+	( Copy key pair.pem file in bastion from local machine  )
+	
+	
+Step 4 :
+	Create Subnet Group for reqiure Subnets with required AZ. 
+	Launch Multi AZ RDS MYSQL For EROS :
+		Security Groups : 
+				1> magento-private subnets (so only the seervers available in the the range of private subnet cidr can access the DB) ( inbound )
+				2> All traffic ( outbound )
+				
+
+
+
+
+{
+
+Step : INSIDE RDS-MYSL DB
+ 
+list user :- select user, host, plugin from mysql.user;
+
+#Useradding:- CREATE USER 'erosmagentouser'@'%' IDENTIFIED BY '***********';
+#Adding permission:- GRANT ALL PRIVILEGES ON erosmagento.* TO 'erosmagentouser'@'%';
+show databases;
+use dbname;
+show tables;
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'password';
+sudo mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u root -p
+user: root
+CREATE USER 'erosmagentouser'@'%' IDENTIFIED BY '**********';
+
+select user,host from mysql.user;
+#Delete User :-DROP USER 'test'@'localhost';
+DROP USER 'erosmagentouser'@'eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com';
+}
+
+				
+Step 5 :
+	Registration On Magento Online Portal & generate public/secrete keys in marketplace, As log in creadentials :
+	
+     #  Magento APP Installation		
+	
+	 Prerequisites for magento:  
+		
+		LAMP server installation :
+			apache2/nginx, mysql, php
+			
+		Install composer :
+		
+		Elastic Search installation :
+		
+			video : ( https://www.youtube.com/watch?v=hVgrXi_9L6Y   ||    https://www.youtube.com/watch?v=HsKXy8AnJTM )
+			document : ( https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html )
+			KIBANA docs : ( https://www.elastic.co/guide/en/kibana/current/deb.html )  
+	
+		ES Commands:
+		for heap size -
+		 sudo su -
+		 cd /etc/elasticsearch/
+		 sudo vim jvm.options/  
+		
+		For ES running status -   
+	         sudo systemctl start elasticsearch
+                 curl localhost:9200
+		
+		PHP Extensions	: ( Add require extensions for magento through CLI )
+			sudo apt install php7.4-xml
+			sudo apt-get install php7.4.3-soap php7.4.3-bcmath
+			sudo apt-get install php-curl
+			  { gd, intl, soap, zip }
+			  
+			## PHP OCI-8 connect extention installation:
+				- {  https://gist.github.com/eSkiSo/781269c79b4dd740e90fcc059c1985ae }
+				
+				- Need to add following line maually at the end of nano /etc/php/7.4/fpm/php.ini   
+					- extension = oci8.so 
+				-  systemctl restart php7.4-fpm
+			  
+		INSTALL PHPMYADMIN : 
+			{video: https://www.youtube.com/watch?v=NboJeJTRzic&t=324s }
+			{docs : https://www.codewithharry.com/blogpost/install-phpmyadmin-ubuntu }
+				
+				To activate database user in phpmyadmib 
+				steps:
+					> cd /etc/phpmyadmin/
+					> sudo nano config-db.php
+					<?php
+					$dbuser='phpmyadmin';
+					$dbpass='erosnowphpmyadmin';    ( CHANGE PASWWORD HERE )
+					$basepath='';  
+					$dbname='phpmyadmin';		( CHANGE DB NAME HERE )
+					$dbserver='eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com';  ( CHANGE HOSTNAME HERE < localhost to endpoint > )
+					$dbport='3306';
+					$dbtype='mysql';
+ 					> EXIT	
+ 
+		 	  
+			  
+
+		Download & Install magento
+			Video : ( https://www.youtube.com/watch?v=36eWE0K1_0w )   
+			Document : ( https://docs.google.com/document/d/1O43-SwvQPmyTNdHQ5ySE1KyohwMHKljDJQEJFPkHcq4/edit )
+		
+		check magento version : sudo cd /var/www/erosnow 
+					 sudo bin/magento --version
+				
+					 
+		Attaching AWS-RDS DB to magento instance : (PENDING)
+		
+		Magento's last steps pending ::
+			for magento should we connect RDS DB instance to it, at the time of installation  
+		
+		
+Step 6 :
+       
+       Configure Target groups :
+       	added private server to TG - EROS-Magento-Prod-EC2	
+       Configure Load Balancer :	
+		type : aplication
+		scheme : internet facing
+		to target group : ITS-Bahrain-Eros-TG
+
+step 7: 
+	 Configure Cloudfront :
+	  
+	 origin name : load balancer
+	 origin type : custome origin
+	 price class : class 200 ( Use North America, Europe, Asia, Middle East, and Africa )
+	 Supported HTTP versions:  HTTP/2, HTTP/1.1, HTTP/1.0
+
+	     
+Step 8 :
+	create a vhost for the erosnow and created one "eros" folder /var/html/ and in that create "pub" folder and point that vhost to that pub folder		
+		
+	cd /etc/nginx/sites-available
+	sudo vim eros.ae.conf	
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

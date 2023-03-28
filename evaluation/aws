@@ -1,0 +1,201 @@
+vitualization type : hvm and paravitual
+hypervisor type : xen and nitro
+
+aws global services : iam, cloudfront, r53, s3, waf
+
+
+IAAS : aws,gcp, ec2, vpc, s3, rds.
+PAAS : EKS, ECS, elastic beanstalk. 
+SAAS : lambda, gmail. 
+
+** IAM POLICIES :
+identity and access management
+ 
+- can create 5000 users from one aws acc.
+- can create 300 grops from one aws acc.
+- can create 1000 roles from one aws acc.
+- can create 20 policies for a single iam users and iam roles from one aws acc.
+- types of policies: resorce bases, identity bases, session policy
+
+	- policy to roles
+	- policy to user
+	- roles to user
+
+
+** s3 :
+	- storage classes
+	standard s3 - normal frequently use
+	one zone ia - keeps bucket in one zone only
+	infrequent access - rarely in use but can acces like standerd, keeps data in three zones
+	glaciar - keeps data for long period can access fastly as standerd
+	deep archive - keeps data for long period but can take time to access data, usually 10-12 hrs
+	intelligent tier - modify the bucket as per usage, from one to another storage class
+	
+** ec2 : 
+
+	instance family :
+		- general puspose : t2, t3, t4
+		- compute optimize : c4, c5, c5a
+		- memory optimise : r6large, xlarge
+		- storage optimise : d2,d3, i3, i4
+		- accelarate computing : p2,p3, p4		
+	ebs volume type :
+		 gp2, provisioned iops type, cold hdd, throughput optimized
+	root device types :
+		 ebs, efs, s3, instance store
+		 
+		 
+	- on-demand : you have to pay only for you use, whatever intance type u use or alocated, u need to pay only for it. for that time. {stay and leave}	 
+	- Reserved Instances – commited to use that instance for some period (1 or 3 yrs),  u will get discout for that. including instance type and Region. 
+	- Spot Instances – Request unused EC2 instances, which can reduce your Amazon EC2 costs significantly.
+			    like ur using unused intances for any purpose, but any other paying high for that they can can be use them, in between.
+	- dedicated host - book entire rack.
+	- dedicated instance - hardware that is dedicated to launch ur instance.		    
+		 
+		
+** VPC	: virtual private cloud
+	- can create in one reagion 5 vpc, 5 EIP, 200 subnet in 1 vpc.
+	- cidr formula : 2^32-prefix (prefix  is number after /)	
+	- nacl: can defines inbount and outbount traffic, may (Stateless) / firewall for subnet.
+	- security groups: define inbount outbount both but if you open any port its open for both inbound and outbount,deny option not available. (Statefull) / for ec2
+	- DHCP: Dynamic Host Configuration Protocol is a client/server protocol that automatically provides an IP host with its IP address and other related configuration information such as the subnet mask and default gateway.	
+	
+** RDS :
+	Relational database service : sql database service managed by aws.
+	
+ 	- 40 rds instance can create in one account
+ 	- rds  uses the EBS for storaging.
+ 	- rds ebs types : gp2 & provision iops
+ 	- rds templates : production, dev/test, free tie
+ 	- rds instance size/class : storage class, memory-optimize, burstable. 
+ 	  
+	my sql - 64 tb
+	oracle - 64 tb
+	aws arora - 64 tb, high throughput
+	postgre sql - 64 tb, highly reliable, stable 
+	maria db - 64 tb, mysql compatible.
+	
+FEATURES OF RDS :-->
+  highly Scalable -  Different Storage Types, scale-up to 32 vCPU & 244 GB-RAM 
+  high availability -  available over multi-AZ, if one dows /can acces from other AZ 
+  Security -  encrypted/decrypt database using keys, backups,snapshots.
+  Backup & Restored -  user initiated & automated backup facility
+  Maintanance & upgrades -  esy to use over aws, saperate console
+
+IMP SECURITY :-->>
+ 	- enable multi-AZ	
+	
+	
+** Cloudfront :
+	- 205 edge location in world
+	- to distribute the content with low latency and can easily fast accessible
+	- access data from the respective nearest edge location.
+	- stores the frequent data in edge location. to access fastly next time.	
+
+	
+** ECR :
+	- elastic container registery
+	- registory is a collection of repository.
+	- registory is a collection of container, images.
+	- same as github repository. 
+	- push, pull, functions.
+
+** aws developer tools :
+	- CODE COMMIT
+	- CODE DEPLOY
+	- CODE BUILD
+	- CODE PIPELINE
+	
+** load balancer:
+	- types- application(https/https) , network(tcp/udp) , gateway, classic
+	- schemes - internal & internet facing	
+	- linstner ruler conditions - host header, path bases, http header, source IP
+
+** targate group:
+	- ec2 instance, ip, lmda function, aaplication load bal.
+	- protocols- https, http, tcp, udp, tls
+	
+	 	
+** Autoscalling : (automatically scale up/down resources as per traffic/cpu utilisation)
+
+	- AS groups : 
+			- A collection of EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
+			- components - scaling policies, scaling activities, and scaling processes.
+
+
+	- policies: 
+		- target traking - keeps targate cpu uti % monitoring and scales up/down intances near that only
+		- step scaling - step by step scale in /out the intance, like if cpu goes up than 60% add 1,then above 70% add 2 ec2 instance. 
+		- simple scaling - adding some numbers of intances after cpu utilztn hist some percent.	 	
+	
+	
+	- Launch template - it specifies instance configuration information. 
+			   - enable you to store the parameters (AMI, instance type, security groups, and key pairs etc.) 		
+	
+	- launch configuration - a template that an EC2 Auto Scaling group uses to launch EC2 instances.
+	
+** Cloud-watch : 
+	
+	- basic monitoring is free(metrics sent per 5 mins) and
+	- detail monitoring is paid (metrics sent per 5 mins). 
+	- u can watch the multiple service's cpu utilization matrics over clodwatch dashboard
+	
+	- threshould can be define as per requiremnet and can set alarm for that thrsld, 
+	- after hitting thrshld cw will take an action to take care of resources
+	- alarm -> actions -> can set to autoscalling, SNS, lamda etc.
+	
+	- ram -uti, hdd-uti, can not set over cw by default, you need to run script for that to watch there utilization on cw dashboard.
+	- the respective scrips are provided by aws-docs.     	
+	
+	
+	
+** EKS: elastic k8s service
+
+  add-on's : Add-ons use to provision a cluster with the pre-requisite operational tools in place for you to begin running your applications.
+ 		kube proxy, core dns, amazon vpc cni
+  node group : collection of a ec2-intances where pod will be deploy.
+  update kubeconfig: aws eks --region us-east-1 update-kubeconfig --name techgenie-cluster		
+ 
+	
+	
+aws WAF:
+	use to allow and deny request for application from any perticular we request sender.
+	can be restrict or allow any perticular region to our application.
+	
+	provide protection and monitor web attacks.
+	
+	
+aws shield :
+ 			
+	
+	
+pod inticity
+node inticity
+k8s storage classes
+terraform modules	
+	
+	
+	
+__________________________________________________________
+how to tranfer job from one  to another jenkins
+types of node grp
+launch templete and configuration diff
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

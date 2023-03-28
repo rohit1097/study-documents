@@ -1,0 +1,46 @@
+DOCKER-II   CASE STUDY
+
+NO 2 ->  Deploy apache & nginix cont. using docker compose.
+   
+: - Installing docker copmose first.
+
+       -  curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-linux-x86_64 -o /usr/bin/docker-compose
+  
+       -  chmod +x /usr/bin/docker-compose
+
+       -  docker-compose --version   
+
+:-  Comands
+
+       1   mkdir docker
+       2   cd docker
+       3   nano docker-compose.yml
+            --> (paste follo. code without change spacing or anything)  
+
+version: '3'
+services:
+  sample1:
+    image:  'httpd'
+    ports:
+      -  "91:80"
+
+  sample2:
+    image:  'nginx'
+    ports:
+      -  "92:80"
+
+
+       4  cat  docker-compose.yml
+       5  docker-compose up -d
+       6  docker ps (check both  httpd(apache) & nginx cont. are there or not)
+       7  cd ..
+       8  curl wgetip.com
+            (copy & paste ip on browser with port no. 91/92 to execute apache/ngix resp. )
+            ( ex.  3.135.225.126:91  &  3.135.225.126:92 )
+
+       9   cd docker  
+     10   docker-compose down ( stoping the containers )
+
+************************************************************************************************************************************** 
+
+       

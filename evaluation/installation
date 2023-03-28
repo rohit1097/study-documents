@@ -1,0 +1,78 @@
+
+pull git repo
+
+install apache2
+install php7.4
+install mysql
+
+data dump:
+mysql tagency < tagency.sql 
+
+Dependencies:
+
+sudo apt install libapache2-mod-php
+
+sudo apt-get install php7.4-mysqli
+
+mysql :
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+
+GRANT ALL ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+
+modifications in functions.php file
+
+
+
+creation of dockerfile
+testing it manually
+
+creating ecr
+pushing image to ecr private registry
+
+
+
+
+Dockerfile dependencies:
+
+RUN docker-php-ext-install mysqli
+
+
+DOCKERFILE:
+
+FROM php:7.4-apache
+
+# Copy application source
+COPY . /var/www/html
+RUN chown -R www-data:www-data /var/www
+
+RUN apt-get update -y
+RUN docker-php-ext-install mysqli
+RUN apt-get install -y git curl
+#RUN apt-get install php7.4-mysql php7.4-mysqli 
+
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+RUN apt-get -y install apache2
+
+
+
+
+kubernetes :
+install k8s, kubectl
+connect eks to server:
+aws eks --region us-east-1 update-kubeconfig --name techgenie-cluster
+
+
+:Adding a content in /etc/resolv.conf file to connect db with website/eks/lb.
+:to resove google's IP (8.8.4.4)
+
+nameserver 8.8.4.4
+
+
+
+ecr-user
+AKIA5XOFQHXKLMZBV2XQ
+9J27ZQsv4dpkXK9qyKyLTBX7/BR/i+L96Ey58aaB
+
+aws -user
+AKIA5XOFQHXKBPXWMIGD
+ZUgfw7IHz3DNUR7RNQCNFJorxP2NZnu1s7E11shR

@@ -1,0 +1,146 @@
+
+************************************************************************************************************
+
+Pull docker image for jenkins/jenkins
+
+************************************************************************************************************
+
+~/jenkins-data$ cat docker-compose.yml
+
+DOCKER COMPOSE FILE FOR JENKINS & REMOTE SERVER.
+
+version: '3'
+services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - /jenkins_home:/var/jenkins_home"
+    networks:
+      - net
+  remote_server:
+    container_name: remote_server
+    image: remote_server
+    build:
+      context: remote_server
+    networks:
+       - net
+networks:
+   net:
+
+************************************************************************************************************
+
+TO START JENKINS :
+
+browse jenkins on browser using <serverIP:8080>
+copy path of jenkins admin password
+docker ps -a 
+docker exec -it (jenkins container id) bash
+cat <admin password path>
+
+
+
+************************************************************************************************************
+
+TO START REMOTE SERVER & SSH TO USER
+
+
+~/jenkins-data/remote_server$ cat Dockerfile 
+
+DOCKERFILE :
+
+FROM ubuntu:latest
+
+RUN mkdir -p /var/run/sshd
+
+RUN apt-get -y update && \
+    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y openssh-server
+
+RUN useradd -rm -d /home/remote_user -s /bin/bash remote_user && \
+    echo remote_user:password | chpasswd
+
+RUN mkdir /home/remote_user/.ssh && \
+    chmod 700 /home/remote_user/.ssh
+
+COPY id_rsa.pub /home/remote_user/.ssh/authorized_keys
+
+RUN chown remote_user:remote_user -R /home/remote_user/.ssh && \
+    chmod 600 /home/remote_user/.ssh/authorized_keys
+    
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]    
+
+
+************************************************************************************************************
+
+
+~/jenkins-data/remote_server$ 
+
+ssh -keygen here & create .pub files 
+
+
+************************************************************************************************************
+
+FOR JOB CREATION ::
+
+~/jenkins-data/remote_server/job$ 
+
+
+DOCKERFILE :
+
+FROM ubuntu
+RUN apt-get update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+RUN apt-get -y install apache2
+RUN rm /var/www/html/index.html
+ADD . /var/www/html/
+ENTRYPOINT apachectl -D FOREGROUND
+
+
+
+INDEX.HTML
+
+<html>
+<head>
+<title> TASK NAME  </title>
+</head>
+<body style = "background-image:url('images/github3.jpg'); background-size: 100%">
+<h2 ALIGN=CENTER>Hello world!</h2>
+<h2 ALIGN=CENTER>WELCOME EVERYBODY </h2>
+<h3 ALIGN=CENTER> DEPLOY AN APLLICATION USING JENKINS  </h3>
+</body>
+</html>
+
+
+
+IMAGE:
+
+~/jenkins-data/remote_server/job/images$ 
+
+# copy n paste image here.
+
+************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

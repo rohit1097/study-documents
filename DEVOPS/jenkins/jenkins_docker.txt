@@ -1,0 +1,134 @@
+  ## JENKINS DEPLOYMENTS THROUGH DOCKER/DOCKER COMPOSE
+
+
+sudo apt-get update -y
+
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt-get update -y
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+
+docker --version
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+sudo systemctl status docker
+
+*******************************************************************************************************
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+sudo docker network create jenkins-net
+
+sudo docker volume create jenkins-docker-data
+
+******************************************************************************
+
+sudo docker container run --name jenkins-server --detach --restart unless-stopped --network jenkins-net --hostname jenkins --publish 8080:8080 --volume jenkins-data:/var/jenkins_home jenkins/jenkins:lts
+
+sudo docker container ps
+
+sudo docker exec jenkins-server cat (paste path)
+
+
+*******************************************************************************************************
+
+
+
+sudo docker rmi (all images if not required)
+sudo docker rm -f (all containers if not required)
+
+sudo docker volume ls ( listing all available volumes ) 	
+sudo docker rm (volume names which we want to remove )
+
+
+( following command which creates conatner, jenkins nw, jenkins hostname, publishig port, volume creation, jenkins image )
+sudo docker container run --name jenkins-server --detach --restart unless-stopped --network jenkins-net --hostname jenkins --publish 8080:8080 --volume jenkins-data:/var/jenkins_home jenkins/jenkins:lts
+
+
+( For listing all image, volume, contaiers )
+sudo docker images -a
+sudo docker ps -a
+sudo docker volume ls
+
+
+cd /var/lib/docker/volumes/jenkins-data/_data/secrets/
+cat initialAdminPassword
+
+browse jenkins on port and paste the Password ( initialAdminPassword ) 
+
+
+*******************************************************************************************************
+
+
+pipeline{
+    agent any
+    stages {
+        stage('git clone') {
+            steps{
+                git branch: 'main',
+                url: 'https://github.com/Sidharth034/jenkins-kubernetes-example.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                  sh 'docker build -t sidharth034/nodejsapp-1.0:latest .'
+                }
+            }
+        }
+        stage('Deploy Docker Image') {
+            steps {
+               // sh 'sudo docker login -u sidharth034 -p $dockerhub-pass'                		
+	//echo 'Login Completed'      
+                script {
+                    withCredentials([string(credentialsId: 'dockerhubp', variable: 'dockerhubp')]) {
+                    sh 'docker login -u sidharth034 -p ${dockerhubp}'
+}
+}
+}
+
+                 //withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                   // sh 'docker login -u devopshint -p ${dockerhubpwd}'
+                 //}  
+               //  sh 'docker push sidharth034/nodejsapp-1.0:latest'
+                //}
+            
+        }
+    
+    stage('Deploy App on k8s') {
+      steps {
+            sshagent(['kube-server-cred']) {
+            sh "scp -o StrictHostKeyChecking=no nodejsapp.yaml ubuntu@3.18.225.2:/home/ubuntu"
+            sh "ssh ubuntu@3.18.225.2 sudo kubectl create -f ."
+            sh 'hostname'
+            //sh 'hostname; ls ; pwd'
+         //   script {
+          //      try{
+            //        sh "ssh ubuntu@3.18.225.2 kubectl create -f ."
+              //  }catch(error){
+                //    sh "ssh ubuntu@3.18.225.2 kubectl create -f ."
+        //    }
+//}
+        }
+      
+    }
+    }
+}
+}
+
+
+
+
+
