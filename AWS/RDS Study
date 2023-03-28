@@ -1,0 +1,54 @@
+
+DIFFERENT AVAILABLE STORAGE TYPES IN RDS :-->
+
+RDBMS : 
+	rows & colums ( amazone rds, amazone arora, amazone redshift )
+No-SQL DB : 
+	Key-Value database (Amazone Dynamo DB)
+Hierarchical DB : 
+	parent-child
+Flat-File DB : 
+	In Memory (Amazone Elastic Cashe)
+
+
+FEATURES OF RDS :-->
+  highly Scalable -  Different Storage Types, scale-up to 32 vCPU & 244 GB-RAM 
+  high availability -  available over multi-AZ, if one dows /can acces from other AZ 
+  Security -  encrypted/decrypt database using keys, backups,snapshots.
+  Backup & Restored -  user initiated & automated backup facility
+  Maintanance & upgrades -  esy to use over aws, saperate console
+  
+  
+  IMP SECURITY :-->>
+ 	- Create a rds instance
+ 	- enable multi-AZ
+  	- enable public access, so it can be accessible from ur local pc,
+  	- BUT if public acces is disable then it can only be acces through, the  sever which is in the same VPC where the rds instance is located. 
+  	
+  	
+  	
+  AMAZONE ARRORA ::-->>
+  High performance&scalable:
+ 	 5* troughput standard MySQL & 3* throughput of standard postgreSQl	
+  high security:
+  	mult. level security, including encryption using keys
+  	
+  high available & durable :
+  		multi AZ Dplymnt, (create replica/not)
+  	99% availble all time, backtrack to previous point	
+  	
+  fully managed : 
+  	managed by rsd, automatic time consuming tasks,
+  	like h/w provisioning, backups,s/w patching	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	

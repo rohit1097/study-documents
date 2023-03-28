@@ -1,0 +1,144 @@
+
+
+## ROUTE 53:
+
+lEC VIDEOS:
+	https://www.youtube.com/watch?v=Qf8BNGq2r6w
+
+LAB VIDEOS :
+  
+  https://www.youtube.com/watch?v=OKtZhbg7he0
+  
+  
+  https://www.youtube.com/watch?v=7V33wpgCUIM&list=RDCMUCT9ME2x6FR2B_vGUM83UyfA&index=2
+  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 	  
+
+
+Route-53 functions:
+  
+  1> DNS management :
+  		- The main function of DNS is to translate domain names into IP Addresses. 
+  		- It also provides a list of mail servers which accept Emails for each domain name. 
+  		- Each domain name in DNS will nominate a set of name servers to be authoritative for its DNS records.
+  		- 
+  		
+  		
+  2> Traffic management :
+  		- to manage the traffic , which is incomming from users to a perticulars server.
+  		- traffic moves in between multiple servers to reduce load & latency.
+  		
+  		
+  		
+  3> Availability monitoring -
+   		- monitore available resources for traffic routing purpose.
+   		- monitor healthy server, and moved into as a resources.
+   		
+   		 
+  4> Domain Restration :
+  		-  we can registere domain for our website here 
+  		ex( go-daddy, aws,)
+  
+  
+  
+  DOMAINS :
+   	1> Geographic domain : 
+   			- based on geograpfic location
+   			- .in , .us, .cn
+   			 
+   	2> Generic Domain :
+   			- .com, .net, .org 
+   	
+   	
+  	
+ EXAMPLE
+ 	- www.abcde.com
+ 	 	
+  	.com = top level domain (TLD) 
+  	www  = access mode
+  	abcd = domain name ( registered website name ) 
+  	
+  	
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 	 	
+  	
+  	
+  ROUTING POLICIES ::
+  	
+  		1> simple routing (default): forwards requests to exact ip location
+  		
+  		2> Failover routing : passing request in between active & passive server, if active server goes down then passive wil goes in active mode until resolution.
+  					- active server - server which is active & primary
+  					- passive server - server which is in a standby mode
+  		
+  		3> Geolocation Routing : forward request as per location where servers are located nearly, to reduce latency & quick execution.
+  		
+  		4> Multi Value Routing : analyse in between ip addreses ie. which is quck responsive server then it  wil connect with is immediately. 
+  		
+  		5> Latency Based Routing : forwords quick responce to quich request. 
+  		
+  		6> Waited Routing :  balance the traffic in between the server, ie. we can give ratios like 70/30 % in between servers to move traffic. as per our choices 
+  		
+  		7> Geo-proximity Routing : shring & expand concept, ie. 
+  		
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  	
+{ https://www.youtube.com/watch?v=6uEwzkfViSM&t=196s }
+  
+  DNS RECORDS	::
+  			1> HOST (A & AAAA) :
+  				- stores IP address for a name.
+				- 'A' used for IPV4 Address
+  				- 'AAAA' used for IPV6 address.
+  				 
+  			2> ALIAS (CNAME) :
+				- also refered to a as canonical name (CNAME)
+				- alternative record or alies for another record.
+				- can find a adress using www.
+				- develope routing in between user to a server.
+				- used to configure a custom URL.
+				  				  				
+  			3> MAIL EXCHANGER (MX RECORDS) :
+  				- identifies mail server for DNS name.
+  				- communication perform in between resp. emails.
+  				- there are multiple mx-records for the same DNS name
+  				- to manage the mails registered with dns.
+  				-  
+  				
+  			4> SERVICE RECORDS (SRV)
+  				- location of service on the network
+  				- contains the following data.
+  					:- Service, Target(host that offers that service), Port, Priority(lowest prefered first)
+  				- usually created auotomatically by applications
+  				- track the messages, ie. delivered/recieved or not.
+  					
+  			5> START OF AUTHORITY (SOA)
+  				- one per zone & created automatically when hosted zone created.
+  				- primary name server
+  				- caontains email adress of administrator.
+  				- diferrent serial number is used to create duplicate copy of server data, its update the copies inrresp time.
+  				- refresh time for the zone.
+  				 
+  			6> NAME SERVER (NS)
+  				- conatins the authority DNS server for that domain
+  				- can be dns server with secondary zones
+  				- consider as a best source to answer queries
+  				- name server do not conatain cached data
+  				- indicated authoritative name server for the zone or domain.
+  				- can be used to break domain into subdomain.
+  				
+  			7> POINTER (PTR)
+  				- mapping between IP adress and Names.
+  				- opposite of A & AAAA records.
+  				- means that, given an ip addressthe name associated with that ip adress can be looked up.
+  				- these records are used by reverse lookup tools
+  				- PTR is not require to perform day to day activities.
+  				     EX. they are not require in order to use active directories
+  	
+  	
+  	
+  	
+  	
+  	
+  	

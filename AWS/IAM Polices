@@ -1,0 +1,44 @@
+
+IDENTITY AND ACCESS MANAGEMENT [IAM]:
+
+ ** IAM POLICIES :
+  
+- can create 5000 users from one aws acc.
+- can create 300 grops from one aws acc.
+- can create 1000 roles from one aws acc.
+- can create 10 policies iam users and iam roles from one aws acc.
+
+
+
+ 
+>> policies means JSON documents that mention what a user or a group can do on AWS resources. It defines the authorization paradigm for AWS resources
+
+>> They contain three components [EAR] at least:
+
+	- Effect: Whether actions are allowed on resources
+	
+	- Actions: What actions are allowed or denied. E.g.,create EC2 instance,delete S3 buckets,create Security Groupd, etc. are different types of actions
+
+	- Resources: AWS resources such as EC2 instances, ELB,S3 buckets or objects, etc. denoted by ARN's POlices can be attached to users or groups
+
+>> Resource-based polices:When polices are attached to resources 
+
+>> Principal: An entity that can take an actions on AWS resource 
+
+
+
+
+IAM ROlES :
+
+	 - role is similar to user/group, in which policies are attached with each other
+	 - a temporary access given to anyone who needs to perform the specific task mensioned in it.
+	 - permission attach to user are valid to the role is being used & taken away once it is no more in use.
+	 
+	 
+	 
+	 
+	 
+	 
+		
+	   
+	   

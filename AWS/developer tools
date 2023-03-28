@@ -1,0 +1,69 @@
+
+  video link 1   ::   { https://www.youtube.com/watch?v=kaZOF4EEPqk&t=1011s  }
+  		   
+  video  link 2  ::    {	https://www.youtube.com/watch?v=U7dmBS1cGA4&t=6s	}
+  		   	
+  GIthub link ::   (  https://github.com/Kodeedudey  )
+ 
+demo link: ( https://www.youtube.com/watch?v=kwhWFRNN3kg&list=PLwbWIFE49l8kuJWknOIMBx7NkOcwK4HxC&index=2 )
+ 
+ *********************************************************************************************************************************
+ 
+  AWS Developers tools :
+ 
+ 	:  using devops principle on aws, where certain developers tool which are used to do that.
+ 
+ 1>  CODE COMMIT
+ 2>  CODE DEPLOY
+ 3>  CODE BUILD
+ 4>  CODE PIPELINE
+ 
+
+ 1>  CODE COMMIT :-->>
+ 	-  Code Commit is a version control tool by AWS & it provides a lot of free features like git. ( push, pull, commit g )
+ 	-  50 GB storage/mnth
+ 	-  10 K push/pull git request/mnth
+ 	-  it is like git, bit bucket,
+ 	-  Highly scalable, managed source, control service
+ 	-  100 build minutes are free in every month
+ 
+ 2>  CODE DEPLOY :-->>
+ 	-  this is an automated deployment tool which can deploy to service like EC2, lamda, Elastic beanstock & every on premise instance.
+ 	-  Automated deployments
+ 	-  centralized control
+ 	-  Easy to adopt
+
+ 3> CODE PIPELINE :-->
+ 	-  continuous delivry tool which is fully manafed by AWS which you can use to autmate your releases
+ 	   for rapid & reliable deployments. 	     	  
+ 	- Rapid Delivery
+ 	- Configurable Workflow.
+ 	- Get startd fasted.
+ 	- Easy to Integrate.
+ 	
+ 	
+ 	
+ ___________________________________________________________________________________________________________________________________________________________
+
+hooks : to run or execute any .sh script on server. hooks stage can be used in pipelins under appspec.yaml / buildspec.yaml file. 
+
+	types of hooks:
+		- Application stop
+		- BeforeInstall
+		- AfterInstall
+		- ApplicationStart
+		- ValidateService	
+ ___________________________________________________________________________________________________________________________________________________________
+ 
+ 
+ PHASES OF buildspec.yaml FILE 	
+ 
+ > INSTALL : installling, dependencies, tools
+ > PRE-BUILD : installing pakeges, (mvn, npm)
+ > BUILD : containerization, docker build
+ > POST-BUILD : pushing or deployment, (ecr, dockerhub)	
+ ___________________________________________________________________________________________________________________________________________________________
+
+
+
+environment variables: key/value pair can store username password here 	

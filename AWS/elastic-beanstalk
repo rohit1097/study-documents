@@ -1,0 +1,108 @@
+
+
+
+NOTES ==
+
+
+
+= AWS Elastic Beanstalk is PAAS
+= It is used for to deploying & scalling web application & services deployed with saveral languages  like php, java, .net, python  on server such as nginx, apache etc.
+= 
+
+
+
+
+- beanstalk is a service where we can create, run & manage application without worrying about underlying infrastructure
+- It is pass
+- we can directly upload website code to beanstalk.
+- beanstalk will be automatically host the application for us with a URL.
+- we only need to concentrate on the code, rather that infrastructure. EB handle & manage all.
+
+- There is NO additional CHARGES for using elastic beanstalks
+- we have to pay for tthat services only which we are use like EC2, RDS, S3 etc.
+
+
+
+
+
+# Elastic Beanstock Concepts:
+
+
+1> Application :- In EB an application is the folder we upload, which is alogical collection of the app VERSION, ENVIRONMENT & CONFIGURATION.
+
+
+2> Application Version :- Application version managing ie. first version is 1 then next will be 1.1.
+
+
+3> Environment :- it is a collection of resources on which our application runs. 
+		 - in enviroment only one version can be run
+		 - to run multiple version, multiple environment we have to create for each version.
+
+
+4> Environment Tier :-  there are two environment , a tier decides on which environment aws resource should be assign.
+
+		1> WEB SERVER ENVIRONMENT :
+				- here, we can directly upload our code & get it hosted.
+				- we will be provided with a URL , 		 
+				  EX> myapp.us-east-2.elasticbeanstalk.com
+		
+
+		2> WORKER ENVIRONMENT :
+				- IN web server it might take a long time to complete, we can OFFLOAD them to the worker.
+				  EX> a task processed videos or one that generates archieve.
+
+				
+5> Environment Configuration :- here, the parameters we enter while creating environment. 
+				- we can also update our configuration whenever we need .
+				- BS eigther apply changes to the existing resourse or delete & deploy new resources 
+
+
+6> Saved Configuration :- It is a templete that we create which contain configuration details
+			- we can directly use them to create our own unique environment.
+			- even if we delete an environment, which is running can be create exactly same by using that template 
+
+
+7> Platforms :- java, php, python, java SE, ruby, node js, .net,  etc.
+
+ 
+ 
+## Configuration Management :
+
+
+# Managed By Customer -->  			
+	- Application
+	- Data
+
+	
+# Managed By Cloud Provider -->			
+	- Operating System
+	- Virtualization
+	- Server
+	- Storage
+	- Network
+	- Runtime
+	- Middleware
+
+
+	
+# Different Web Hosting Platforms Like Beanstalks [ PAAS ]
+
+	- Open	Shift = RedHat
+	- Google App Engine = [ GCP ]
+	- Scallingo = 
+	- Python Anyware = online integrating development platform
+	- Elastic Beanstalk = AWS
+	- Azure App Service = 	Microsoft Azure
+			
+			
+
+# ARCHITECHTURE OF ELASTIC BEANSTALK :
+
+	1> Beanstalk Environment
+	2> Elastic Load Balancer
+	3> Auotoscalling group
+	4> EC2 Instance
+	5> Host Manager
+	6> Security Groups			
+							
+										   

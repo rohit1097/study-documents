@@ -1,0 +1,41 @@
+
+
+WAF : web application firewall
+WCU : wite capaciyty unit
+web acl : access control list
+
+- create a web acl by adding rules to protect your resources
+- the wcu of a web acl is the sum of the wcu of all rules & rule grops in the web acl.
+- the maximunm wcu for the web acl is 1500.
+ 
+ RULES:
+ - create a rules to look for a certain criteria & take actions if the criteria is met
+   EX - allow requests, block requests
+ - you can also create a rules to count the number of requests.
+ - web acl capacity units for rule is calculated when you CREATE or UPDATE a rule & is displayed besides it on the console.
+ - rules can be usd individually or in reusable rule groups
+ - rule groups are provided under AWS managed rules & also available in AWS marketplace
+ - u need to specify WCU when you create rule groups. once specified can not be chanages.
+ 
+ # waf is a cost effective
+ - waf charge on the basis of the number of web access control lists, 
+ - the number of rules that you add per web ACL & the number of web request that you receive.
+    
+ 
+ 
+ - WAF allows you to control access to your content by using IP address from where the request originited or request query string values.
+ - if the request is allowed to IP it provides access, & respond with the requested content otherwise, responds with a 403 status code.  
+ - there are three Major component, in WAF are
+ 	- ACl
+ 	- Rules
+ 	- Rule Groups
+ 
+ 
+ 
+ IP-SETS 	
+ 
+ - Contains an array of strings that specify one or more IP addresses or blocks of IP addresses in Classless Inter-Domain Routing (CIDR) notation. 
+ - AWS WAF supports all IPv4 and IPv6 CIDR ranges except for /0.
+ - The name of the IP set. the name of an IPSet cannot be change after you create it.
+ - 
+

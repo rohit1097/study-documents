@@ -1,0 +1,63 @@
+
+
+Volume Types :
+
+1) General purpose 2(GP2):
+ 	- baseline purformance is 3 iops/bg with a minimum 100 iops & maximum 10000 iops  
+ 	- max burst performance is 30000 iops
+ 	- maximum throughput is 160 mb/s
+
+2) Provisioned SSD (IO1):
+	- From 100 to 32000 iops can be provisioned
+	- Maximum throughput per volume is 500 mb/s
+
+3) Throughput optimized HDD (ST1):
+	- baseline performance is 40 mb/s per TB with a maximum of 500 mb/s per volume.
+	- burst performance is 250 mb/s & max. of 500 mb/s per volume
+
+4) Cold Storage (HDD) :
+	- Baseline performance is 12 mb/s per TB with a max. of 192 mb/s per volume.	
+	- Burst performance is 80 mb/s per TB with a max. of 250 mb/s per volume.	
+		
+		
+		
+
+
+
+
+
+lsblk ---> block devices connected to ec2 instance
+file -s /dev/devicename  --->  check file systems made in that perticular device name
+mkfd -t ext4 /dev/devicename ---> create a file system
+mkdir ebsvolume --->  generate directory to attache device 
+mount /dev/devicename path/to/ebsvolume  ---> to mount the devive  
+df -h  ---> shows all available data file systems.
+unmount /dev/devicename  --->> to unmount the device
+rsize2fs  ---> resize the size of your ebs volume space
+
+
+
+
+
+
+Amazone Elastic File System :
+
+> Available Only For LINUX OS. 
+
+> Amazon EFS is a "cloud based File Storage service" for applications and workloads that run in AWS public cloud
+
+>If our application is running on EC2 & needs a file system or in any use case where a file system is needed
+
+	- Highly Available
+	- Elastic
+	- Shared file System
+	- High Performance
+	
+> sudo apt-get install-y nfs-common ( install nfs(netwrk filr systm) for connecting shared file systems)	
+> mkdir efs (filename)
+> Sudo mount -t efs ........(comnd available over resp. efs)
+> cd efs
+> touch 1.txt 2.txt
+> ls -al
+
+

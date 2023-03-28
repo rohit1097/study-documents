@@ -1,0 +1,63 @@
+
+reference:
+https://www.youtube.com/watch?v=HyX_ECXIy-w&t=1174s
+
+ECS ( Elastic Container Service )
+
+
+# Applications:
+
+- Deploy Containers without infra management
+- containerize everything
+- highly secure
+- performance at scale
+- designed for use with oyher aws service
+- integrate with all aws sevice
+
+
+# how it works :
+
+- Build container images 
+	- create/build/push cont. images to repo.	
+- Define application 
+	- selects comt images, resources for our application
+- launch containers
+	- ECS launches cont for our application
+- manage containers
+	- ECS scales our app, & manage our cont for availability
+	
+	
+esc service deployment type :
+
+	- rolling update : ECS service scheduler replaces the currently running tasks with new tasks(replace with healthy instances). bases on minimum Healthy Percent and maximum Percent.
+	- blue-green deployment : blue= live, green=idle, same environments are there, replace env with new env, 
+	   (by sending some traffic to new env if works well then completely moved to new) 
+	
+	
+## PROCESS OF DEPLOYING DOCKER CONTAINER OVER ECS ::
+
+1> OVER AWS ECS MANSGEMENT CONSOLE
+
+2> Set up your first run with amazon ECS :
+	- here, u will launch a wizard using amazon ecs
+
+3> Task Defination :
+	- Define's the size of container ( cpu/memory size )
+	- number of container
+	 
+4> Configure the Amazone ECS Service :
+	- load balancers
+	- port numbers
+	- ip adress
+	- name of cont
+	- name of the service	  	
+	- desired numbers of tasks
+
+5> Configuration Of Cluster :
+	- Puting Security in this step
+	
+6> Result: 
+	- launch instance & run service
+	- bunch of containers rumnning in that instance			
+	
+	

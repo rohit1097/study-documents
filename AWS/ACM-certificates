@@ -1,0 +1,36 @@
+
+ACM = AWS Certificate Manager
+[youtube - https://www.youtube.com/watch?v=pTQrAZbHmRU ]
+
+- ACM is a service that lets you easily provision, manage, and deploy public/private Secure Sockets Layer(SSL) & Transport Layer Security (TLS) certificates. 
+- Use for AWS services and your internal connected resources. 
+- ACM SSL/TLS certificates are used to secure network communications. 
+- ACM Establish the identity of websites over the Internet as well as resources on private networks.
+- ACM removes the time-consuming manual process of purchasing, uploading, and renewing SSL/TLS certificates.
+
+The ACM SSL/TLS certificates can deploy on ACM-integrated AWS resources like -	
+	- Elastic Load Balancers
+	- Amazon CloudFront distributions APIs on API Gateway,
+
+
+- SSL/TLS certificate provisioned by ACM are free. these certificates are easy to provision with a few button clicks
+- Public and private certificates provisioned through ACM for use with ACM-integrated services are free.
+- You have to pay only for the AWS resources you create to run your application. 
+
+- ACM certificate can also be renewals, but cannon be dowloaded.
+- they can only be used with AWS resources such as elastic load balancer, amazone cloudfront, Amazon CloudFront distributions APIs on API Gateway.  
+
+
+
+
+Steps to launch ACM SSL/TLS Certificate -
+	1. add your repective domain name
+	2. select validation method
+		 (DNS validation/Email validation)
+	3. complete the"I approve " email validation from domain mailstation, if you selected an email validation
+	4. review & validate the request.
+	5. launch the certificate.
+	
+	
+	
+	

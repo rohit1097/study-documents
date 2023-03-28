@@ -1,0 +1,19 @@
+
+
+
+from multiprocessing import pool
+
+def f(x):
+    while True:
+       x * X
+       
+no_of_cpu_to_be_consumed = 3
+
+p = Pool(processes=no_of_cpu_to_be_consumed)
+p.map(f, range(no_of_cpu_to_be_consumed))
+
+
+
+
+mysql -h  database-2.cefxmbh8rqfl.us-east-1.rds.amazonaws.com 
+-u admin -p 3306 -p             

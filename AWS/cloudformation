@@ -1,0 +1,33 @@
+
+
+- AWS cloud formation is a service that helps you model & set up your AWS rsources so that you can spend less time to manging those resources & more time focusing on your applications that run AWS.
+
+- for creating templates in AWS CF, you uhav eto use a JSON script.
+- json- Java Script Object Notation ,
+open standard format that uses human readable text to transmit data objects consisting of attribute-value pairs.
+
+Structure of JSON Format ::
+
+- AWS template format version - version of your template.
+- Description - text only file, where the details are stored. to describing template in words. without understand script 
+- Metadate - contains properties of your templates.
+- Parameter - any values you have pass in temoplates are includes in the parameters
+- Mappings - include dependancies include in your aws resources. 
+- Conditions - while created/upgraded stacks conditions are stored at here.
+- Outputs - whateveer output provided by template are called as outputs 
+- Resources - its includes all resources which you are giung to include in your infrastructure.		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
