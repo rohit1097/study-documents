@@ -1,0 +1,36 @@
+
+
+GitHub References :
+
+https://medium.com/devops-with-valentine/aws-s3-static-website-hosting-ci-cd-pipeline-using-gitlab-ci-ae7dfd461067
+
+https://www.c-sharpcorner.com/blogs/how-to-create-simple-hello-world-application-in-node-js-step-by-step
+
+https://github.com/heroku/node-js-sample.git
+
+https://medium.com/bb-tutorials-and-thoughts/how-to-develop-and-build-react-app-with-nodejs-backend-typescript-version-27a6a283a7c5
+
+https://github.com/adwisatya/youtube-tutorial-artifact/blob/main/UiuPKBMDf5I/.gitlab-ci.yml
+
+
+
+
+Youtube :
+Exposing HTTP API Gateway via AWS CloudFront | Vimal Paliwal
+https://www.youtube.com/watch?v=pGmbyTq_hxU&list=LL&index=6&t=843s
+
+
+Gitlab CI CD Pipeline for Auto Deploy AWS Lambda Python | DevOps for Beginner Tutorial
+https://www.youtube.com/watch?v=UiuPKBMDf5I
+
+
+
+
+Erros :
+
+git pushing errors:
+https://stackoverflow.com/questions/28429819/rejected-master-master-fetch-first
+
+git fetch origin master
+git pull --rebase origin master
+

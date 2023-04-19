@@ -1,0 +1,237 @@
+
+
+THERE ARE THREE-3 SCRIPT ARE HERE TO DEPLOY DTA IN S3 AND API-LAMDA THROUGH GITLAB :
+
+
+
+****************************************************************************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************************************************************************
+
+stages:
+- build
+- deploy
+- archive
+- push
+
+Build NodsJS app:
+  stage: build
+  image: node:10.19.0-stretch-slim
+  before_script:
+     - apt-get update
+     - apt-get install git -y
+  script:
+     - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then cd frontend-s3/my-app && npm install && npm run build; else echo "error"; fi
+  artifacts:
+    paths: 
+      - frontend-s3/my-app
+    #- cd ../api
+    #- npm install
+    #- npm run build
+
+
+
+Deploy on S3 Bucket:
+  stage: deploy
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then aws s3 rm s3://rohit-gitlab --recursive && aws s3 cp --recursive frontend-s3/my-app/build s3://rohit-gitlab; else echo "error"; fi
+#    - aws s3 rm s3://rohit-gitlab --recursive
+#    - aws s3 cp --recursive frontend-s3/ s3://rohit-gitlab
+
+Archive index.js:
+  stage: archive
+  image: ubuntu
+  when:
+    on_success
+  before_script:
+    - apt-get update
+    - apt-get install zip -y
+    - apt-get install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && zip -g index.zip index.js; else echo "error"; fi
+#    - cd backend-lambda
+#    - zip -g index.zip index.js
+  artifacts:
+    paths:
+      - backend-lambda
+
+Push index.zip to lambda function:
+  stage: push
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && aws lambda update-function-code --function-name rohit-2 --zip-file fileb://index.zip; else echo "error"; fi
+#    - cd backend-lambda
+#    - aws lambda update-function-code --function-name neo-LB-function --zip-file fileb://index.zip
+
+
+
+
+
+
+
+
+
+
+************************************************************************************************************************************************************************************************************************
+************************************************************************************************************************************************************************************************************************
+
+
+SCRIPT FOR S3 AND LAMDA:
+
+
+stages:
+- build
+- deploy
+- archive
+- push
+
+Build NodsJS app:
+  stage: build
+  image: node:10.19.0-stretch-slim
+  before_script:
+     - apt-get update
+     - apt-get install git -y
+  script:
+     - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then cd frontend-s3/my-app && npm install && npm run build; else echo "error"; fi
+  artifacts:
+    paths: 
+      - frontend-s3/my-app
+    #- cd ../api
+    #- npm install
+    #- npm run build
+
+
+
+Deploy on S3 Bucket:
+  stage: deploy
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then aws s3 rm s3://rohit-gitlab --recursive && aws s3 cp --recursive frontend-s3/my-app/build s3://rohit-gitlab; else echo "error"; fi
+#    - aws s3 rm s3://rohit-gitlab --recursive
+#    - aws s3 cp --recursive frontend-s3/ s3://rohit-gitlab
+
+Archive index.js:
+  stage: archive
+  image: ubuntu
+  when:
+    on_success
+  before_script:
+    - apt-get update
+    - apt-get install zip -y
+    - apt-get install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && zip -g index.zip index.js; else echo "error"; fi
+#    - cd backend-lambda
+#    - zip -g index.zip index.js
+  artifacts:
+    paths:
+      - backend-lambda
+
+Push index.zip to lambda function:
+  stage: push
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && aws lambda update-function-code --function-name rohit-2 --zip-file fileb://index.zip; else echo "error"; fi
+#    - cd backend-lambda
+#    - aws lambda update-function-code --function-name neo-LB-function --zip-file fileb://index.zip
+
+
+
+
+************************************************************************************************************************************************************************************************************************
+************************************************************************************************************************************************************************************************************************
+
+
+
+SCRIPT FOR THE API AND S3 FOR THE NODE JS PROJECT :
+
+GITHUB LINK : 
+git clone https://github.com/bbachi/react-nodejs-typescript-example.git
+
+REFERENCE:
+https://medium.com/bb-tutorials-and-thoughts/how-to-develop-and-build-react-app-with-nodejs-backend-typescript-version-27a6a283a7c5
+
+
+stages:
+- build
+- deploy
+- archive
+- push
+
+Build NodsJS app:
+  stage: build
+  image: node:10.19.0-stretch-slim
+  before_script:
+     - apt-get update 
+     - apt-get install git -y
+  script:
+     - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then cd frontend-s3/my-app && npm install && npm run build; else echo "error"; fi
+  artifacts:
+    paths: 
+      - frontend-s3/my-app
+    #- cd ../api
+    #- npm install
+    #- npm run build
+
+
+
+Deploy on S3 Bucket:
+  stage: deploy
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update -y
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'frontend-s3')" ]]; then aws s3 rm s3://rohit-gitlab --recursive && aws s3 cp --recursive frontend-s3/my-app/build s3://rohit-gitlab; else echo "error"; fi
+#    - aws s3 rm s3://rohit-gitlab --recursive
+#    - aws s3 cp --recursive frontend-s3/ s3://rohit-gitlab
+
+
+
+Archive index.js:
+  stage: archive
+  image: ubuntu
+  when:
+    on_success
+  before_script:
+    - apt-get update
+    - apt-get install zip -y
+    - apt-get install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && zip -g index.zip index.js; else echo "error"; fi
+#    - cd backend-lambda
+#    - zip -g index.zip index.js
+  artifacts:
+    paths:
+      - backend-lambda
+
+Push index.zip to lambda function:
+  stage: push
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update -y
+    - yum install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && aws lambda update-function-code --function-name rohit-2 --zip-file fileb://index.zip; else echo "error"; fi
+#    - cd backend-lambda
+#    - aws lambda update-function-code --function-name neo-LB-function --zip-file fileb://index.zip
+
+
+
+
+
+
+
+

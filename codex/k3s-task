@@ -1,0 +1,158 @@
+
+
+WORK ON INGRESS CONTROLLER TODAY , 
+1. DO IT ON LOCAL USING K3S
+2. DEPLOY A SIMPLE NODEJS APPLICATION 
+3. DEPLOY INGRESS CONTROLLER ON IT
+4. ROUTE SHOULD BE INGRESS > SERVICE > DEPLOYMENT > POD
+
+
+
+Reference : 	
+k3s installation : https://www.youtube.com/watch?v=pKWPrdTSoEU
+express erros : https://stackoverflow.com/questions/17162308/node-js-error-cannot-find-module-express
+	
+	
+	
+{{
+
+K3s Official page:
+https://k3s.io/
+
+Cheat:
+## Install:
+curl -sfL https://get.k3s.io | sh -
+
+## K3S Token lookup:
+sudo cat /var/lib/rancher/k3s/server/node-token
+
+## Worker Node Install and Join to the Cluster:
+curl -sfL https://get.k3s.io | K3S_URL=https://"Private IP":6443 K3S_TOKEN="your K3S TOCKEN" sh -
+
+}}
+
+
+
+step 1 :
+	create an ec2 server 
+	install docker, git, k3s, npm.
+
+step 2 :
+	go to docker hub , take credentioal 
+	do docker login on ec2 server
+	create index.js file, paste code from the docs for index.js 	
+	create dockerfile for the index.js file. (given follow)
+	create docker image -> tag the image with ur name for dockerhub registry -> push it to dockerhub
+	
+		   npm install express 	{ install express module for dockerfile index.js file }
+		   docker build -t xyz  .      { image BUILDING cmnd}
+   		   docker run -it xyz bash    { image RUN cmds}
+   		   docker tag phpcode rohit/xyz  {  image Launch cmnd }
+
+
+
+
+{{
+
+DOCKERFILE::
+
+FROM node:12-alpine
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY . /app
+CMD node index.js
+EXPOSE 3000
+
+}}
+
+
+STEP 3 :
+	 create a namespace nodejs for deployment
+	 create a deployment.yaml file for k3s pod deployment 
+ 	 create a service.yaml file for k3s service creation 
+ 	 create a ingress.yaml file for k3s ingress creation 
+ 	
+ 		 
+		< k3s kubectl get pods -n nodejs >
+		< k3s kubectl get svc -n nodejs  >
+		< k3s kubectl get ingress -n nodejs >
+	
+{{{ 	
+ 	
+DEPLOYMENT.YAML FILE ::-->
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynode-app
+  namespace: nodejs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mynode-app
+  template:
+    metadata:
+      labels:
+        app: mynode-app
+    spec:
+      containers:
+      - name: mynode-app
+        image: rohit1097/mynode-app
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: mycreds
+
+
+SERVICE.YAML FILE ::-->
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynode-app
+  namespace: nodejs
+spec:
+  selector:
+    app: mynode-app
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+
+
+INGRESS.YAML FILE ::-->
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mynode-ingress
+  namespace: nodejs
+spec:
+  rules:
+  - host: mynodeapp.com
+    http:
+      paths:
+      - backend:
+             service:
+                name: mynode-app
+                port:
+                  number: 80
+        path: /
+        pathType: ImplementationSpecific          
+ 	 
+}}}
+
+
+
+STEP 4 :
+	Go to your local
+	make changes in your hosts file 
+		< ip adress  hostname > 
+		< 54.89.26.70 mynodeapp.com  >
+	
+      :: BROWSE THE HOSTNAME OF YOUR EC2 ON BROWSER TO SEE THE WEBSITE/OUTPUT ::	
+ 
+ 
+ 	 

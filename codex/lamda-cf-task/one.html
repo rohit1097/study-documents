@@ -1,0 +1,11 @@
+<script type="text/javascript">
+    var apiUrl = 'https://s5tgzow81e.execute-api.us-east-1.amazonaws.com/one';
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+      // Work with JSON data here
+      console.log(data);
+    }).catch(err => {
+      // Do something for an error here
+    });
+</script>

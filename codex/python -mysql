@@ -1,0 +1,125 @@
+#python create_a_database.py
+#import the library
+
+import mysql.connector
+
+# creating connection
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password"
+)
+
+#print the connection
+print(conn)
+
+# import the cursor from the connection (conn)
+mycursor = conn.cursor()
+#print the mycursor
+print(mycursor)
+print(mycursor.execute("CREATE DATABASE Test1"))
+
+
+
+#python conn_to_database.py
+# creating connection to the database
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password",
+  database="Test1"
+)
+
+# print the conn
+print(conn)
+
+
+#python create_table.py
+# creating connection to the database
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password",
+  database="Test1"
+)
+
+# we create a mycursor object using the conn.cursor()
+mycursor = conn.cursor()
+mycursor.execute("DROP TABLE IF EXISTS MOVIE")
+
+# we write a query to create a table
+query = "CREATE TABLE MOVIE(id INT PRIMARY KEY,name varchar(30),year INT)"
+
+# We execute the query here
+mycursor.execute(query)
+
+# after done the process, we close the connection
+conn.close()
+
+#python insert_record_multiple.py
+# creating connection to the database
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password",
+  database="Test1"
+)
+mycursor = conn.cursor()
+
+
+# execute the query with their record value
+query = 'INSERT INTO MOVIE (id, name, year) VALUES (%s, %s, %s)'
+val = [(2, "ae dil hai muskil", 2014),
+       (4, "jab tak hai jaan", 2014),
+       (5, "dhol", 2020),
+       (6, "mr. India", 2013)
+       ]
+mycursor.executemany(query,val)
+
+
+# we commit(save) the records to the table
+conn.commit()
+print(mycursor.rowcount, "record(s) inserted.")
+
+
+#python record_insertion.py
+# creating connection to the database
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password",
+  database="Test1"
+)
+mycursor = conn.cursor()
+
+# execute the query with their record value
+query = 'insert into MOVIE(id, name, year)  \
+       values (1, "dhamal", 2010 )'
+mycursor.execute(query)
+
+# we commit(save) the records to the table
+conn.commit()
+
+
+#python select_query.py
+# creating connection to the database
+conn = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="password",
+  database="Test1"
+)
+mycursor = conn.cursor()
+
+
+# execute the query  and fetch all the records
+query = 'SELECT * FROM MOVIE'
+mycursor.execute(query)
+result = mycursor.fetchall()
+
+# we print our result
+print(result)
+
+# now we do iteration on each record and print
+for record in result:
+  print(record)

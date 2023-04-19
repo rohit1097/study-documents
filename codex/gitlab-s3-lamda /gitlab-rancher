@@ -1,0 +1,238 @@
+
+
+GITLAB-DOCKER-KUBERNETES-RANCHER ::-->>
+
+## use the same pipeline to deploy your application on kubernetes, rancher ##
+
+STEPS FOR REFERENCE :
+
+1. create dockerfile of lambda code
+2. Create a docker image and push to docker hub or gitlab registry
+3. If registry is private , create secret with registry token
+4. deploy to rancher
+
+
+
+
+
+
+STEP 1 :
+ Create iam user from aws iam,
+	- add access key, secrete key, rancher-config file :
+ 	
+	AWS_ACCESS_KEY_ID
+	AWS_SECRET_ACCESS_KEY
+	CI_REGISTRY_USER	
+	CI_GITLAB_TOKEN
+	KUBE_CONFIG	
+
+
+STEP 2:
+	- Create ec2 server with, install git, docker, kubectl.
+	- go to gitlab,
+	- create a blank project
+	- copy git repo creds and paste on ec2 server     
+	- create ssh-keygen to create public key.
+	- copy key and add to gitlab ssh-key ( gitlab -> edit profile -> sshkeys )
+	
+		kubectl installation < https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ >
+		
+
+
+STEP 3 :
+	- Go to ec2 server,
+	- clone the gitlab repo onn server
+ 
+ 	- clone the project code file from respective repository 
+ 		< https://github.com/bbachi/react-nodejs-typescript-example.git > 
+        - create a new directory outside oof repo directory copy the contect
+	- copy/move the files into the gilab repo folder.
+
+STEP 4 :
+	- create a dockerfile on ec2 server to create a docker image for the code to push that image on gitlab.
+	- go to gitlab -> click edit profile -> click on Personal Access Tokens -> create a token and save it
+	- after creating dockerfile. create an image using following docker comands.
+	 
+		< docker login registry.neosoftcloud.org >
+		< docker build -t registry.neosoftcloud.org/rohit.p/gitlab-k8s . >
+		< docker push registry.neosoftcloud.org/rohit.p/gitlab-k8s >
+		< Docker images >
+		< docker ps >
+	 
+
+STEP 5 :
+	- git add .
+	- git commit -m "xyz"
+	- git push origin master
+	- Check files uploaded to gitlab repo.
+
+
+STEP 6 : 
+	- Go to rancher account 
+	- go to cluster
+	- click on kubeconfig file, copy file content and save in your notes 
+	- save that kubeconfig file content in gitlab CICD variables with name $KUBE_CONFIG in file format.  
+
+STEP 7 :
+	- kubernetes-rancher prerequisites.
+	- create a deployment file to push on rancher. 
+	- create service file to push on rancher. 
+	- after file creation use following kubectl comands to create a deployment, and pods.
+
+		install kubectl:
+		mkdir .kube
+		cd .kube
+		vim config ( paste the kubeconfig file content in this file )
+		vim run-service.yaml
+		vim run-deployments.yaml
+		<  kubectl apply -f run-service.yaml  >
+		<  kubectl apply -f run-deployments.yaml  >
+		<  kubectl get deployments -n testgitlab  > ( -n for namespace)
+		<  kubectl get deployments -n testgitlab >	
+
+EDIT FILES AS PER YOUR. -->>
+
+{{{
+
+run-deployments.yaml file ::
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gitlab-k8s
+  name: gitlab-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: gitlab-k8s
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gitlab-k8s
+    spec:
+      containers:
+        - image: rohit.p/gitlab-k8s:latest
+          name: gitlab-k8s-container
+          ports:
+            - containerPort: 3080
+          resources: {}
+      restartPolicy: Always
+status: {}
+
+}}}		
+	
+{{{
+
+run-service.yaml file ::
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nodejs-project-k8s
+  name: nodejs-project-k8s
+  namespace: testgitlab
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 3080
+  selector:
+    io.kompose.service: nodejs-project-k8s
+status:
+  loadBalancer: {}
+
+}}}		
+	
+	
+	
+
+STEP 7 :
+	- go to gitlab CICD -> pipeline -> create new pipline
+	- paste the following pipeline 
+	- make changes as per requirement, 	
+	- like - aws-access-key, secrete-key, config file , etc
+	- check variables in cicd.		
+	
+	
+{{{
+
+stages:
+- archive
+#- push
+- build-image
+#- push-image
+- deploy-image
+
+Archive index.js:
+  stage: archive
+  image: ubuntu
+  when:
+    on_success
+  before_script:
+    - apt-get update
+    - apt-get install zip -y
+    - apt-get install git -y
+  script:
+    - if [[ "$(git whatchanged -n 1 | grep 'backend-lambda')" ]]; then cd backend-lambda && zip -g index.zip index.js; else echo "error"; fi
+#    - cd backend-lambda
+#    - zip -g index.zip index.js
+  artifacts:
+    paths:
+      - backend-lambda
+
+
+Build Docker Image:
+  stage: build-image
+  image: docker:18.09.7-dind
+  services: 
+      - docker:18.09.7-dind  
+  script:
+  #  - apt-get update   
+  #  - apt-get install docker.io -y 
+  #  - docker info
+    - apk add --no-cache git
+    - export DOCKER_HOST=tcp://localhost:2375
+    - docker login registry.neosoftcloud.org -u "$CI_REGISTRY_USER" -p "$CI_GITLAB_TOKEN"
+    - docker build -t registry.neosoftcloud.org/rohit.p/gitlab-k8s . && docker push registry.neosoftcloud.org/rohit.p/gitlab-k8s  
+       
+#    - apk add --no-cache git
+#    - export DOCKER_HOST=tcp://localhost:2375
+   
+deploy-image:
+  stage: deploy-image
+  image: amazon/aws-cli:latest
+  before_script:
+    - yum update -y
+    - yum install git -y
+  script:
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    - mkdir ~/.kube 
+    - cat $KUBE_CONFIG > ~/.kube/config
+    - kubectl rollout restart deploy/gitlab-k8s -n testgitlab
+
+}}}
+
+
+
+
+Step 9 :
+	- Task Done here.
+				
+

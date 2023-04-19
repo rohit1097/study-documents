@@ -1,0 +1,194 @@
+
+	TASK --- >>>
+
+Find a backend and frontend app for node js , put both in one repository on gitlab 
+Create a pipeline that should check if frontend is changed or backend is changed 
+accordingly it should deploy
+
+Frontend should deploy on s3 and backend should deploy on Lambda
+
+*************************************************************************************
+
+
+STEP 1 :
+ Create iam user from aws iam,
+	- add access key, secrete key, bucket name, regin name:
+ 	
+	AWS_ACCESS_KEY_ID
+	AWS_DEFAULT_REGION
+	AWS_SECRET_ACCESS_KEY	
+	S3_BUCKET 
+
+
+
+STEP 2:
+	- Create ec2 server with, install git, docker.
+	- go to gitlab,
+	- create a blank project
+	- copy git repo creds and paste on ec2 server     
+	- create ssh-keygen to create public key.
+	- copy key and add to gitlab ssh-key ( gitlab -> edit profile -> sshkeys )
+
+
+
+STEP 3 :
+	- Go to ec2 server,
+	- clone the gitlab repo onn server
+	- create code files for deployments ex. index.html, index.js
+{{{{
+1> sample index.html --> 	 
+
+	<html><body><h1> ******** HELLO FROM S3......!!!! created by Rohit....!!!!! *******  </h1></body></html>
+
+2> index.js file -->	
+	exports.handler = async (event) => {
+    // TODO implement
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify(' *******  Hello from Lambda, created by Rohit...!! *******  '),
+    };
+    return response;
+};
+}}}}
+
+
+
+STEP 4 :
+	- git add .
+	- git commit -m "xyz"
+	- git push origin master
+	- Check files uploaded to gitlab repo.
+	
+
+
+Step 5 :
+	- create s3 Bucket with object should be public, 
+	- upload a sample .html file for testing.
+	- create a static website hosting in bucket. 
+	- go to bucket -> Properties -> go down -> add file for static web hosting.
+
+
+
+Step 6 
+	- create a Lamda function
+	- go to configuration -> copy function URL -> brows it to test lamda is working fine or not,
+	- go to Code -> copy code -> paste in index.js file. 		
+
+
+
+Step 7 
+	- go to gitlab CICD -> pipeline -> create new pipline
+	- paste the following pipeline 
+	- make changes as per requirement, 	
+	- like, lamda name, branch name, aws-region, etc
+	- check variables in cicd.
+	
+	
+	
+{{{
+
+stages:
+    - build
+    - deploy
+    - archiving
+    - deploy to lamda
+
+build:
+  stage: build
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
+
+
+deploy:
+  stage: deploy
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
+  script:
+    - aws --version
+    - aws s3 rm s3://$S3_BUCKET --recursive
+    - aws s3 cp public s3://$S3_BUCKET --recursive
+
+
+archive:
+    stage: archiving
+    only:
+        - master
+    image: ubuntu
+    when:
+        on_success
+    before_script:
+        - apt-get update
+        - apt-get install zip -y
+    script:
+        - zip -g $CI_PROJECT_NAME.zip index.js
+    artifacts:
+        paths:
+        - $CI_PROJECT_NAME.zip
+
+
+deploy to lambda:
+    stage: deploy to lamda
+    image:
+        name: amazon/aws-cli
+        entrypoint: [""]
+    script:
+        - aws --version
+        - aws configure set region us-east-1
+        - aws lambda update-function-code --function-name rohit-1 --zip-file fileb://$CI_PROJECT_NAME.zip
+
+}}}
+
+
+
+
+
+STEP 8 :
+	- check s3 buckate data is refreshed/update or not
+	- check lamda function is updated or not.
+	- If changes are made succsessfully then Browse the respective URL's to see the expected optputs.
+
+
+
+Step 9 :
+	- Task Done here.
+				
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	  	

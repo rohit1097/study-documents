@@ -1,0 +1,359 @@
+
+
+##  AWS REGION = Bahrain
+	- Regions are geographic locations in which public cloud service providers' data centers reside.
+
+***********************************************************************************************************************************************************************************************************************************************
+
+##	VPC ::
+		- Amazon Virtual Private Cloud (VPC) gives you complete control over your virtual networking environment, including resource placement, connectivity, and security.
+		  Amazon VPC enables you to build a virtual network in the AWS cloud - no VPNs, hardware, or physical datacenters required. You can define your own network space,
+		  and control how your network and the Amazon EC2 resources inside your network are exposed to the Internet.
+		
+		# VPC creatin for EROS-Magento =
+		 	- NAME = ITS-Bahrain-Eros-Prod
+			- CIDR range for VPC = 10.0.0.0/16
+	
+	SUBNET :
+		 -  A subnet is a range of IP addresses in your VPC. You can launch AWS resources, such as EC2 instances, into a specific subnet. When you create a subnet, you specify the IPv4 CIDR 			    block for the subnet, which is a subset of the VPC CIDR block.
+	 
+		# Public Subnets Creation for EROS with CIDR Range :	 		
+			[ Public Subnets ]
+			- ITS-Bahrain-Prod-Public-1a = 10.0.1.0/24	
+			- ITS-Bahrain-Prod-Public-1b = 10.0.4.0/24	
+
+		# Private Subnets Creation for EROS with CIDR Range : 		
+			[ Private Subnets ]
+			- ITS-Bahrain-Prod-Private-1a = 10.0.2.0/24			
+			- ITS-Bahrain-Prod-Private-1b = 10.0.3.0/24	
+		
+			
+	SECURITY GROUPS :
+		- A security group acts as a virtual firewall for your EC2 instances to control incoming and outgoing traffic. ... You can add rules to each security group that allow traffic to or 			  from its associated instances. You can modify the rules for a security group at any time.
+
+		# Security Groups Creation for EROS with CIDR Range : 			
+		1>	[ VPC ]
+			 ITS-Bahrain-Eros-Prod-VPC-default :
+				Inbound Rules :
+					- All Traffic = All =  0.0.0.0/0
+				Outbound Rules :
+					- All Traffic = All =  0.0.0.0/0
+				
+		2>	[ RDS ]
+			Eros-Bahrain-RDS-MYSQL-SG :
+				Inbound Rules :
+					- MYSQL/Aurora	= TCP = 3306 = 10.0.3.0/24	
+					- MYSQL/Aurora	= TCP = 3306 = 10.0.2.0/24	
+				Outbound Rules :
+					- All Traffic = All =  0.0.0.0/0
+				
+		3>	[ ELB ]
+			Eros-Bahrain-Prod-ELB-SG :
+				Inbound Rules :
+					- HTTP = TCP = 80 = 0.0.0.0/0	
+				Outbound Rules :
+				- All Traffic = All =  0.0.0.0/0
+
+		4>	[ EC2 BASTION SERVER ]
+			EROS-bastion-Prod-EC2 Server Security Groups :
+				Inbound Rules :
+				- SSH = TCP = 22 = 0.0.0.0/0	
+				Outbound Rules :
+				- All Traffic = All =  0.0.0.0/0
+
+
+		5>	[ EC2 PRIVATE SERVER ] 
+			EROS-Magento-Prod-EC2 Server Security Groups :
+				Inbound Rules :
+					- SSH = TCP = 22 = 10.0.1.39/32	
+					- HTTP = TCP = 80 = 0.0.0.0/0	
+			Outbound Rules :
+				- All Traffic = All =  0.0.0.0/0
+
+			
+	
+	ROUTE TABLE :
+		- A route table contains a set of rules, called routes, that are used to determine where network traffic from your subnet or gateway is directed. To put it simply, a route table tells 		  network packets which way they need to go to get to their destination.
+			
+		# Route Table Creation For EROS-MAGENTO :
+			
+		1>	ITS-Bahrain-Prod-Public-RT 
+				Route Table ID : [ rtb-042fc6071eb7d2db3 ]
+				Routes :
+				   [Target -> Local ] [ Destination -> 10.0.0.0/16 ]
+				   [Target -> igw-0287e4e6819a43261 ] [ Destination -> 0.0.0.0/0 ]	
+				Subnet Association :
+				   Explicit subnet associations (1)
+  					- subnet - ITS-Bahrain-Prod-Public-1a	
+			
+		2>	ITS-Bahrain-Prod-PRIVATE-RT :
+				Route Table ID : [ rtb-091c4e6fd1cecb4f2]
+				Routes :
+				   [Target -> Local ] [ Destination -> 10.0.0.0/16 ]
+				   [Target -> nat-06d47ae2fa7ba00dc ] [ Destination -> 0.0.0.0/0 ]	
+				Subnet Association :
+				   Explicit subnet associations (2)
+  					- subnet - ITS-Bahrain-Prod-Private-1b
+					         - ITS-Bahrain-Prod-Private-1a  							  	
+				
+
+
+	Internet GETWAY :
+		- An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows communication between your VPC and the internet.
+		  An Internet gateway can transfer communications between an enterprise network and the Internet.	
+
+		# Internet Getway Creation For EROS-MAGENTO :
+		
+		1>	ITS-Bahrain-Eros-Prod-IGW
+				IGW ID = igw-0287e4e6819a43261
+				Attached to VPC = "ITS-Bahrain-Eros-Prod"
+				Attached to Public Subnet = 
+
+	NAT GETWAY :
+		- NAT Gateway is a highly available AWS managed service that makes it easy to connect to the Internet from instances within a private subnet in an Amazon Virtual Private Cloud (Amazon 		  VPC). Previously, you needed to launch a NAT instance to enable NAT for instances in a private subnet.
+
+		# Internet Getway Creation For EROS-MAGENTO :
+
+		1>	ITS-Bahrain-Eros-Prod-IGW
+				Nat getway ID : [ nat-06d47ae2fa7ba00dc ]
+				Subnet Associate : ITS-Bahrain-Prod-Public-1a
+				 
+
+	ELASTIC IP :
+		- An Elastic IP address is a reserved public IP address that you can assign to any EC2 instance in a particular region, until you choose to release it. ... The Elastic IP address 			  remains in place through events that normally cause the address to change, such as stopping or restarting the instance. 
+
+		# Elastic IP Address Creation :
+		
+		1>	For Basion Server :
+			Eros-Bastion-Prod-EIP
+				EIP = 15.184.164.205	
+		
+		2>	For Nat Getway :
+			ITS-Bahrain-Eros-Prod-EI-NAT
+				EIP = 15.184.111.25
+
+			
+***********************************************************************************************************************************************************************************************************************************************
+***********************************************************************************************************************************************************************************************************************************************
+
+## RDS:	
+	
+	# Create Subnet Group for reqiure Subnets with required AZ. 
+		- An RDS Subnet Group is a collection of subnets that you can use to designate for your RDS database instance in a VPC.
+		
+		
+		{ image of subnet groups }
+		
+		
+		
+	# RDS Intance .
+		- Name : eros-prod-rds-mysql 
+		  Mult-AZ
+
+	
+
+
+	# Create a Parameter Group for RDS :
+		- You can define your own parameter groups with customized settings. Then you can modify your DB instances to use your own parameter groups.
+
+		{ image of parameter gropus }
+
+	# Launch Multi AZ RDS MYSQL For EROS :
+			-> Amazon RDS is available on several database instance types - optimized for memory, performance or I/O - and provides you with six familiar database engines to choose from,  		                  including Amazon Aurora, PostgreSQL, MySQL, MariaDB, Oracle Database, and SQL Server. Here we have use MySQL RDS server.
+	
+		- Security Groups :
+				1> magento-private subnets IP range (cidr) (so only the servers available in the the range of private subnet cidr can access the DB) ( inbound )
+				2> All traffic ( for outbound )
+		
+		{ images of security groups  }	
+		
+		
+	
+{
+
+Step :
+	 INSIDE RDS-MYSL DB : 
+ 
+	Query of listing user :-  select user, host, plugin from mysql.user;
+
+	# Useradding:- CREATE USER 'erosmagentouser'@'%' IDENTIFIED BY '***********';
+	# Adding permission:- GRANT ALL PRIVILEGES ON erosmagento.* TO 'erosmagentouser'@'%';
+	show databases;
+	use dbname;
+	show tables;
+	
+	CREATE USER 'test'@'localhost' IDENTIFIED BY 'password';
+	sudo mysql -h eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com -P 3306 -u root -p
+	user: root
+	CREATE USER 'erosmagentouser'@'%' IDENTIFIED BY '**********';
+
+	select user,host from mysql.user;
+	#Delete User :-DROP USER 'test'@'localhost';
+	DROP USER 'erosmagentouser'@'eros-prod-rds-mysql.cuywhj9qtja2.me-south-1.rds.amazonaws.com';
+}
+
+
+
+
+
+
+
+******************************************************************************************************************************************************************************
+
+
+	# EC2 :		
+	
+	 -> Amazon Elastic Compute Cloud (Amazon EC2) provides scalable computing capacity in the Amazon Web Services (AWS) Cloud. You can use Amazon EC2 to launch as many or as few virtual servers 		    as you need, configure security and networking, and manage storage.
+	 
+   	- Launch EC2 Instance for ubuntu 20.04
+		   Bastion Public = [t3.micro] 
+		   Private Magento = [t3.xlarge] 		
+			
+		{ image of ec2 aws instances }
+		
+	- EC2 servers security groups 
+		(  magento private server Inbound = HTTP-80/ssh-22 )
+		(  magento private server Outbound = All Traffic )
+		
+		(  Bastian Public server Inbound = ssh-22 )
+		(  Bastian Public server Outbound = All Traffic )
+		
+		
+	- Connection in between them through SSH KEY
+		( Copy key pair.pem file in bastion from local machine  )
+	
+		{ image of ec2 aws bastion instance server inside }
+
+	- connection established in between  bastion & private server.
+		( ssh from local to bastion, and from bastion to private server )
+		
+		{ image of ec2 aws private instance server inside }
+		 	 	 
+
+
+******************************************************************************************************************************************************************************		
+
+
+	## Configure Target Groups :
+
+	- A target group tells a load balancer where to direct traffic to : EC2 instances, fixed IP addresses; or AWS Lambda functions, amongst others. When creating a load balancer, you create one or more listeners and configure listener rules to direct the traffic to one target group.
+       
+       Configure Target groups :
+       	target group group name = ITS-Bahrain-Eros-TG
+       	Added private server to Target Groups = EROS-Magento-Prod-EC2	
+       	
+## configure Load balancer :
+
+	- A load balancer distributes incoming application traffic across multiple EC2 instances in multiple Availability Zones. This increases the fault tolerance of your applications. Elastic Load 		  Balancing detects unhealthy instances and routes traffic only to healthy instances.	
+
+ 	
+       Configure Load Balancer :	
+		Type : Application
+		Scheme : Internet-Facing
+		To target group : ITS-Bahrain-Eros-TG
+		Security group : Eros-Bahrain-Prod-ELB-SG :
+		DNS Name : Eros-Bahrain-Prod-ELB-1804256526.me-south-1.elb.amazonaws.coms
+	
+	[ Image Of tagrget groups ]
+	[ Image of ELB  ]		
+
+
+
+
+
+******************************************************************************************************************************************************************************
+
+
+	# ON PRIVATE SERVER :
+	
+	
+	 Prerequisites For Magento:  
+		
+		LAMP server installation : [Ng
+		inx, mysql, php ]
+			LAMP is an open source Web development platform that uses Linux as the operating system, Apache as the Web server, MySQL as the relational database management system and PHP 				as the object-oriented scripting language.			
+			
+			
+		Install Composer : 	
+				- The Composer is a package manager for PHP programming language which can be used in application level.
+				- The PHP developers all over the world use PHP Composer to manage application dependencies.
+			-->> sudo apt install composer
+		
+	
+	# ES Commands: -->
+
+		Download and install the public signing key:
+			- wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+	
+		You may need to install the apt-transport-https package on Debian before proceeding:
+			
+			- sudo apt-get install apt-transport-https
+	
+		Save the repository definition to /etc/apt/sources.list.d/elastic-7.x.list:
+			- echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+	
+		You can install the Elasticsearch Debian package with:
+			- sudo apt-get update && sudo apt-get install elasticsearch
+	
+		You Have to enable and start Elasticsearch to Run it successfully.
+			- sudo systemctl enable elasticsearch
+			- sudo systemctl start elasticsearch
+	
+		To check Elasticsearch	is in running state 
+		        - curl localhost:9200
+	
+
+
+		for heap size :->
+	 	   sudo su -
+		   cd /etc/elasticsearch/
+		   sudo vim jvm.options/  
+	
+                  		
+		PHP Extensions	: ( Add require extensions for magento through CLI )
+			sudo apt install php7.4-xml
+			apt install php7.4-cli 
+			sudo apt-get install php-bcmath
+			sudo apt-get install php-curl
+			sudo apt-get install php-gd
+			sudo apt-get install php-intl
+			sudo apt-get install php-soap
+			sudo apt-get install php-zip
+			 { gd, intl, soap, zip }
+
+		Download & Install magento :
+			- Magento is a free, open-source eCommerce platform that lets you start selling online quickly. The best Magento hosting plan makes your e-commerce site fast and secure. The 				  ideal Magento hosting environment is a complete LAMP stack with a fast server.
+			- Download Magento server. 
+			
+		check magento version : sudo cd /var/www/erosnow 
+					 sudo bin/magento --version
+					
+
+******************************************************************************************************************************************************************************		
+
+
+	## create a virtual host for the erosnow and created one "erosnow" folder /var/html/ and in that "erosnow" create "pub" folder and point that vhost to that pub folder		
+		
+	cd /etc/nginx/sites-available
+	sudo vim eros.ae.conf	
+
+
+******************************************************************************************************************************************************************************		
+
+
+ 
+******************************************************************************************************************************************************************************		
+
+
+
+
+
+
+
+
+
+
+
+
+
+

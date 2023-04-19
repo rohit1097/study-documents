@@ -1,0 +1,21 @@
+
+
+Serverless  :
+
+-serverless has no physical or vitual servers to manage.
+-it will automatically scale uo and down as per needs and usage, as per the traffic rate up it will scale up and down
+-no need to pay for its idle state, it is very highly available 
+-no need to have hardware provision for serverless
+-capacity provisioning and  patching is can be handle automatically
+-serverless services ca be very cheap as we have to pay as per usage.
+-no need to install external software, code libraries are already installed. also there is no need to attache external hardwares like hard disc.
+
+example - lamda,  fargate, SQS, SNS, API Gateway service, s3, dynamo-DB 
+
+
+EC2 :
+
+-ec2 has a servers which are provisioned by AWS, with a few clicks within a few minutes.
+-ec2 supports various operating services, on a servers
+-ec2 is a backbone of multiple services.
+-in ec2 prepackaged AMIs with different softwares are avilable.

@@ -1,0 +1,333 @@
+
+# TASK FOR ROUTING THROUGH INGRESS CONTROLLER BY USING TWO NAMESPACES 
+
+using one ingress , route traffic to services in another namespace based on different paths for each service
+
+eg: /api ----> api-service
+     /frontend ---> frontend-service
+
+frontend and api are in diffferent namespace 
+all request should pass through one ingress only  
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Reference : 	
+NODE JS APPLICATION :-- >>  https://someweb.github.io/devops/ingress-nodejs-app-kubernetes/
+k3s installation : https://www.youtube.com/watch?v=pKWPrdTSoEU
+express erros : https://stackoverflow.com/questions/17162308/node-js-error-cannot-find-module-express
+k8s:--> https://kubernetes.io/docs/concepts/services-networking/service/	(search ctrl+f) :--> Type ExternalName 
+	
+{{
+
+K3s Official page:
+https://k3s.io/
+
+Cheat:
+## Install:
+curl -sfL https://get.k3s.io | sh -
+
+## K3S Token lookup:
+sudo cat /var/lib/rancher/k3s/server/node-token
+
+## Worker Node Install and Join to the Cluster:
+curl -sfL https://get.k3s.io | K3S_URL=https://"Private IP":6443 K3S_TOKEN="your K3S TOCKEN" sh -
+
+}}
+
+-------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+step 1 :
+	create an ec2 server 
+	install docker, git, k3s, npm, helm
+	
+	INSTALL ingress controller by helm
+
+step 2 :
+	go to docker hub , take credentioal 
+	do docker login on ec2 server
+	
+	create index.js file, paste code from the docs for index.js 	
+	create api.js file, paste code from the docs for index.js
+	 	
+	create dockerfile for the index.js file. (given follow)
+	create dockerfile for the api.js file. (given follow)
+	
+	create docker image for app.js -> tag the image with ur name for dockerhub registry -> push it to dockerhub
+	create docker image api.js-> tag the image with ur name for dockerhub registry -> push it to dockerhub
+
+
+	DO FOLLOW STEPS FOR BOTH:
+		   npm install express 	{ install express module for dockerfile index.js file }
+		   docker build -t xyz  .      { image BUILDING cmnd}
+   		   docker run -it xyz bash    { image RUN cmds}
+   		   docker tag phpcode rohit/xyz  {  image Launch cmnd }
+		   
+		   docker run -it -d -p 80:3000 rohit1097/mynode-api 
+		   docker system prune -a (for deleting all images)	
+
+{{
+
+DOCKERFILE for index.js ::
+
+FROM node:12-alpine
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY . /app
+CMD node index.js
+EXPOSE 3000
+__________________________________________________________
+
+DOCKERFILE for api.js ::
+
+FROM node:12-alpine
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY . /app
+CMD node api.js
+EXPOSE 3000
+__________________________________________________________
+
+API.JS FILE
+
+const express = require("express");
+const app = express();
+ 
+app.listen(3000, function () {
+  console.log("listening on 3000");
+});
+ 
+app.get("/", (req, res) => {
+  res.send("Welcome USER !! FROM API ");
+  console.log("welcome url /");
+});
+ 
+app.get("/delete", (req, res) => {
+  res.send("User was deleted");
+  console.log("DELETE user");
+});
+ 
+app.get("/create", (req, res) => {
+  res.send("User was created!!");
+  console.log("CREATE user");
+	
+});
+
+app.get("/backend", (req, res) => {
+  res.send("Welcome USER !! FROM API ");
+  console.log("welcome url /");
+
+});
+
+_________________________________________________________________
+
+INDEX.JS
+
+
+const express = require("express");
+const app = express();
+ 
+app.listen(3000, function () {
+  console.log("listening on 3000");
+});
+ 
+app.get("/", (req, res) => {
+  res.send("Welcome USER! to MY nodejs app!");
+  console.log("welcome url /");
+});
+ 
+app.get("/delete", (req, res) => {
+  res.send("User was deleted");
+  console.log("DELETE user");
+});
+ 
+app.get("/create", (req, res) => {
+  res.send("User was created!!");
+  console.log("CREATE user");
+});
+
+app.get("/frontend", (req, res) => {
+  res.send("Welcome USER! to MY nodejs app!");
+  console.log("welcome url /");
+});	
+
+_________________________________________________________________
+
+}}
+
+
+
+STEP 3 :
+
+	 create a namespace nodejs & api-nodejs for deployment
+	 create a deployment.yaml & api-deployment.yaml file for k3s pod deployment 
+ 	 create a service.yaml & api-service.yaml file for k3s service creation 
+ 	 create a ingress.yaml file for k3s ingress creation 
+ 		
+ 		< kubectl get ns >	 
+		< kubectl get pods -n nodejs >
+		< kubectl get svc -n nodejs  >
+		< kubectl get ingress -n nodejs >
+		< kubectl get deployment -n nodejs >
+	
+		kubectl create namespace <ns-name>
+		kubectl apply -f deployment.yaml -n <ns-name>   (create deployment & pod)
+		kubectl apply -f service.yaml -n <ns-name>   (create service)
+
+		kubectl delete deployment <deployment name> -n <ns-name>		
+		kubectl delete svc <svc name> -n <ns-name>		
+	
+{{{ 
+___________________________________________________________	
+ 	
+DEPLOYMENT.YAML FILE ::-->
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynode-app
+  namespace: nodejs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mynode-app
+  template:
+    metadata:
+      labels:
+        app: mynode-app
+    spec:
+      containers:
+      - name: mynode-app
+        image: rohit1097/mynode-app
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: mycreds
+
+___________________________________________________________
+
+SERVICE.YAML FILE ::-->
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynode-app
+  namespace: nodejs
+spec:
+  selector:
+    app: mynode-app
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+  
+___________________________________________________________
+  
+API-DEPLOYMENT.YAML
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynode-api
+  namespace: api-nodejs
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: mynode-api
+  template:
+    metadata:
+      labels:
+        app: mynode-api
+    spec:
+      containers:
+      - name: mynode-api
+        image: rohit1097/mynode-api 
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: mycreds
+
+___________________________________________________________
+
+API-SERVICE.YAML
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynode-api
+  namespace: api-nodejs
+spec:
+  selector:
+    app: mynode-api
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+
+___________________________________________________________
+
+EXTERNAL.YAML
+
+( go to k8s official docs, < https://kubernetes.io/docs/concepts/services-networking/service/ > find ctrl+f -> Type External Name --> copy and paste code in external.yaml file -> make changes ->  apply )
+	: this file is for to route the service from one to another through one ingress :
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: nodejs
+spec:
+  type: ExternalName
+  externalName: mynode-api.api-nodejs.svc.cluster.local
+
+___________________________________________________________
+
+
+INGRESS.YAML FILE ::-->
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+  name: node-ingress
+  namespace: nodejs
+spec:
+  rules:
+  - host: mynodeapp.com
+    http:
+      paths:
+      - backend:
+             service:
+                name: mynode-app
+                port:
+                  number: 80
+        path: /frontend
+        pathType: ImplementationSpecific
+      - backend:
+             service:
+                name: my-service
+                port:
+                  number: 80
+        path: /backend
+        pathType: ImplementationSpecific
+
+___________________________________________________________
+ 	 
+}}}
+
+STEP 4 :
+	Go to your local
+	make changes in your hosts file 
+		< <ip-adress>  <hostname> > 
+		< 54.89.26.70 mynodeapp.com  >
+	
+      :: BROWSE THE HOSTNAME OF YOUR EC2 ON BROWSER TO SEE THE WEBSITE/OUTPUT ::	
+
